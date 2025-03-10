@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <Folder Include="Acheteurs\Commands\" />
+    <Folder Include="Factures\Commands\" />
   </ItemGroup>
 
   <ItemGroup>

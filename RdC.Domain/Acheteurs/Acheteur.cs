@@ -1,4 +1,6 @@
-﻿namespace RdC.Domain.Acheteurs
+﻿using RdC.Domain.Factures;
+
+namespace RdC.Domain.Acheteurs
 {
     public class Acheteur
     {
@@ -9,6 +11,9 @@
         public string Email { get; private set; }
         public string Telephone { get; private set; }
 
+        public ICollection<Facture> Factures { get; private set; }
+        
+
         public Acheteur(int acheteurID, string nom, string prenom, string? adresse, string email, string telephone)
         {
             AcheteurID = acheteurID;
@@ -17,13 +22,9 @@
             Adresse = adresse;
             Email = email;
             Telephone = telephone;
+            Factures = new List<Facture>();
         }
 
-        // Allow EF Core to create via reflexion an instance of the subscription
-        // same reason of adding private set
-        private Acheteur()
-        {
-
-        }
+        private Acheteur() { }
     }
 }

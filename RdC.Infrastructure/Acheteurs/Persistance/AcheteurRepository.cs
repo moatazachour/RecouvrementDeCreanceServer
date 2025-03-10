@@ -23,30 +23,37 @@ namespace RdC.Infrastructure.Acheteurs.Persistance
         {
             var currentAcheteurs = await _dbContext.Acheteurs.ToListAsync();
 
-            var response = await _httpClient.GetAsync("");
-
             try
             {
-                var allAcheteurs = await _httpClient.GetFromJsonAsync<List<Acheteur>>("");
+                var response = await _httpClient.GetAsync("");
 
-                if (allAcheteurs != null)
+                if (response.IsSuccessStatusCode)
                 {
-                    var newAcheteurs = allAcheteurs
-                        .Where(acheteur => !currentAcheteurs.Exists(ca => ca.AcheteurID == acheteur.AcheteurID))
-                        .ToList();
+                    var allAcheteurs = await _httpClient.GetFromJsonAsync<List<Acheteur>>("");
 
-                    if (newAcheteurs.Any())
+                    if (allAcheteurs != null)
                     {
-                        await _dbContext.Acheteurs.AddRangeAsync(newAcheteurs);
-                        await _dbContext.SaveChangesAsync();
+                        var newAcheteurs = allAcheteurs
+                            .Where(acheteur => !currentAcheteurs.Exists(ca => ca.AcheteurID == acheteur.AcheteurID))
+                            .ToList();
 
-                        currentAcheteurs.AddRange(newAcheteurs);
+                        if (newAcheteurs.Any())
+                        {
+                            await _dbContext.Acheteurs.AddRangeAsync(newAcheteurs);
+                            await _dbContext.SaveChangesAsync();
+
+                            currentAcheteurs.AddRange(newAcheteurs);
+                        }
                     }
+                }
+                else
+                {
+                    Console.WriteLine("External API call failed. Returning current acheteurs.");
                 }
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                Console.WriteLine($"An error occurred while calling the external API: {ex.Message}");
             }
 
             return currentAcheteurs;

@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using RdC.Application.Common.Interfaces;
 using RdC.Infrastructure.Acheteurs.Persistance;
 using RdC.Infrastructure.Common.Persistance;
+using RdC.Infrastructure.Factures.Persistance;
 
 namespace RdC.Infrastructure
 {
@@ -20,8 +21,10 @@ namespace RdC.Infrastructure
                         """));
 
             services.AddHttpClient<AcheteurRepository>();
+            services.AddHttpClient<FactureRepository>();
 
             services.AddScoped<IAcheteurRepository, AcheteurRepository>();
+            services.AddScoped<IFactureRepository, FactureRepository>();
 
             return services;
         }
