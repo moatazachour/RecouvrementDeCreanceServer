@@ -32,7 +32,7 @@ namespace RdC.Infrastructure.Acheteurs.Persistance
                 if (allAcheteurs != null)
                 {
                     var newAcheteurs = allAcheteurs
-                        .Where(acheteur => currentAcheteurs.Exists(ca => ca.AcheteurID != acheteur.AcheteurID))
+                        .Where(acheteur => !currentAcheteurs.Exists(ca => ca.AcheteurID == acheteur.AcheteurID))
                         .ToList();
 
                     if (newAcheteurs.Any())
