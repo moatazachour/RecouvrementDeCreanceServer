@@ -18,6 +18,7 @@ namespace RdC.Infrastructure.Factures.Persistance
                 .HasMaxLength(50);
 
             builder.Property(f => f.DateEcheance)
+                .HasColumnType("date")
                 .IsRequired();
 
             builder.Property(f => f.MontantTotal)

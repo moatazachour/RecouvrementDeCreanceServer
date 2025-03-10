@@ -25,9 +25,6 @@ namespace RdC.Infrastructure.Factures.Persistance
             return await _dbContext.Factures.FirstOrDefaultAsync(f => f.FactureID == FactureID);
         }
 
-
-        // here I want to change it that if the server from which I import Factures with this api https://localhost:7285/api/Factures
-        // is not running I will return the currentFactures.
         public async Task<List<Facture>> ListAsync()
         {
             var currentFactures = await _dbContext.Factures.ToListAsync();
