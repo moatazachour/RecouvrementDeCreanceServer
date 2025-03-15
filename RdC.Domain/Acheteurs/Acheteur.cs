@@ -12,7 +12,7 @@ namespace RdC.Domain.Acheteurs
         public string Telephone { get; private set; }
 
         public ICollection<Facture> Factures { get; private set; }
-        
+
 
         public Acheteur(int acheteurID, string nom, string prenom, string? adresse, string email, string telephone)
         {

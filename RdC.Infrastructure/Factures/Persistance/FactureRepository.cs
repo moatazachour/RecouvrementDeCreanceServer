@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using RdC.Application.Common.Interfaces;
-using RdC.Domain.Acheteurs;
 using RdC.Domain.Factures;
 using RdC.Infrastructure.Common.Persistance;
 using System.Net.Http.Json;
@@ -42,6 +41,16 @@ namespace RdC.Infrastructure.Factures.Persistance
                         var newFactures = allFactures
                             .Where(facture => !currentFactures.Exists(cf => cf.FactureID == facture.FactureID))
                             .ToList();
+
+                        newFactures.ForEach(facture =>
+                        {
+                            if (facture.MontantRestantDue == decimal.Zero)
+                                facture.Status = FactureStatus.Payee;
+                            else if (facture.MontantRestantDue == facture.MontantTotal)
+                                facture.Status = FactureStatus.Impayee;
+                            else
+                                facture.Status = FactureStatus.PartiellementPayee;
+                        });
 
                         if (newFactures.Any())
                         {

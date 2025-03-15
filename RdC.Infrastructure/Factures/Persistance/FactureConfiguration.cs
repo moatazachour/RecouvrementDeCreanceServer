@@ -29,6 +29,10 @@ namespace RdC.Infrastructure.Factures.Persistance
                 .HasColumnType("decimal(18, 3)")
                 .IsRequired();
 
+            builder.Property(f => f.Status)
+                .HasConversion<int>()
+                .IsRequired();
+
             builder.HasOne(f => f.Acheteur)
                 .WithMany(a => a.Factures)
                 .HasForeignKey(f => f.AcheteurID);

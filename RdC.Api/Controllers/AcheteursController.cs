@@ -30,11 +30,11 @@ namespace RdC.Api.Controllers
 
                 var listAcheteurs = listAcheteursResult.Select(acheteur =>
                             new AcheteurResponse(
-                                acheteur.AcheteurID, 
-                                acheteur.Nom, 
-                                acheteur.Prenom, 
-                                acheteur.Adresse, 
-                                acheteur.Email, 
+                                acheteur.AcheteurID,
+                                acheteur.Nom,
+                                acheteur.Prenom,
+                                acheteur.Adresse,
+                                acheteur.Email,
                                 acheteur.Telephone))
                             .ToList();
 

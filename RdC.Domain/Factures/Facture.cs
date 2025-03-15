@@ -7,17 +7,18 @@ namespace RdC.Domain.Factures
     {
         public int FactureID { get; private set; }
         public string NumFacture { get; private set; }
-        
+
         [JsonPropertyName("dateDeEcheance")]
         public DateOnly DateEcheance { get; private set; }
         public decimal MontantTotal { get; private set; }
         public decimal MontantRestantDue { get; private set; }
+        public FactureStatus Status { get; set; }
         public int AcheteurID { get; private set; }
 
         public Acheteur Acheteur { get; private set; }
 
         public Facture(int factureID, string numFacture, DateOnly dateEcheance, decimal montantTotal,
-            decimal montantRestantDue, int acheteurID)
+            decimal montantRestantDue, int acheteurID, FactureStatus status)
         {
             FactureID = factureID;
             NumFacture = numFacture;
@@ -25,6 +26,7 @@ namespace RdC.Domain.Factures
             MontantTotal = montantTotal;
             MontantRestantDue = montantRestantDue;
             AcheteurID = acheteurID;
+            Status = status;
         }
 
         private Facture() { }

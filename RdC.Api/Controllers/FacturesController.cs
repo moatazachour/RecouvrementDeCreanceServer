@@ -35,7 +35,8 @@ namespace RdC.Api.Controllers
                                 facture.DateEcheance,
                                 facture.MontantTotal,
                                 facture.MontantRestantDue,
-                                facture.AcheteurID))
+                                facture.AcheteurID,
+                                Enum.Parse<FactureStatus>(facture.Status.ToString())))
                             .ToList();
 
                 return Ok(listFactures);
@@ -50,7 +51,7 @@ namespace RdC.Api.Controllers
         [ProducesResponseType(typeof(FactureResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> GetFacture([FromBody] int id)
+        public async Task<IActionResult> GetFacture([FromRoute] int id)
         {
             try
             {
@@ -69,7 +70,8 @@ namespace RdC.Api.Controllers
                     facture.DateEcheance,
                     facture.MontantTotal,
                     facture.MontantRestantDue,
-                    facture.AcheteurID));
+                    facture.AcheteurID,
+                    Enum.Parse<FactureStatus>(facture.Status.ToString())));
             }
             catch (Exception ex)
             {
