@@ -2,7 +2,9 @@
 using Microsoft.AspNetCore.Mvc;
 using RdC.Application.Acheteurs.Queries.GetAcheteur;
 using RdC.Application.Acheteurs.Queries.ListAcheteurs;
+using RdC.Domain.Acheteurs;
 using RdC.Domain.DTO.Acheteur;
+using RdC.Domain.DTO.Facture;
 
 namespace RdC.Api.Controllers
 {
@@ -35,7 +37,15 @@ namespace RdC.Api.Controllers
                                 acheteur.Prenom,
                                 acheteur.Adresse,
                                 acheteur.Email,
-                                acheteur.Telephone))
+                                acheteur.Telephone,
+                                acheteur.Factures.Select(facture => new FactureResponse(
+                                                            facture.FactureID,
+                                                            facture.NumFacture,
+                                                            facture.DateEcheance,
+                                                            facture.MontantTotal,
+                                                            facture.MontantRestantDue,
+                                                            facture.AcheteurID,
+                                                            facture.Status)).ToList()))
                             .ToList();
 
                 return Ok(listAcheteurs);
@@ -56,20 +66,28 @@ namespace RdC.Api.Controllers
             {
                 var query = new GetAcheteurQuery(id);
 
-                var getAcheteurResult = await _mediator.Send(query);
+                var acheteur = await _mediator.Send(query);
 
-                if (getAcheteurResult is null)
+                if (acheteur is null)
                 {
                     return NotFound($"Acheteur with ID {id} not found.");
                 }
 
                 return Ok(new AcheteurResponse(
-                    getAcheteurResult.AcheteurID,
-                    getAcheteurResult.Nom,
-                    getAcheteurResult.Prenom,
-                    getAcheteurResult.Adresse,
-                    getAcheteurResult.Email,
-                    getAcheteurResult.Telephone));
+                    acheteur.AcheteurID,
+                    acheteur.Nom,
+                    acheteur.Prenom,
+                    acheteur.Adresse,
+                    acheteur.Email,
+                    acheteur.Telephone,
+                    acheteur.Factures.Select(facture => new FactureResponse(
+                                                            facture.FactureID,
+                                                            facture.NumFacture,
+                                                            facture.DateEcheance,
+                                                            facture.MontantTotal,
+                                                            facture.MontantRestantDue,
+                                                            facture.AcheteurID,
+                                                            facture.Status)).ToList()));
             }
             catch (Exception ex)
             {

@@ -1,4 +1,5 @@
 ﻿using RdC.Domain.Factures;
+using System.Text.Json.Serialization;
 
 namespace RdC.Domain.Acheteurs
 {
@@ -11,6 +12,7 @@ namespace RdC.Domain.Acheteurs
         public string Email { get; private set; }
         public string Telephone { get; private set; }
 
+        [JsonIgnore]
         public ICollection<Facture> Factures { get; private set; }
 
 

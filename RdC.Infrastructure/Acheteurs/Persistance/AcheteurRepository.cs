@@ -21,7 +21,10 @@ namespace RdC.Infrastructure.Acheteurs.Persistance
 
         public async Task<List<Acheteur>> ListAsync()
         {
-            var currentAcheteurs = await _dbContext.Acheteurs.ToListAsync();
+            var currentAcheteurs = await _dbContext.Acheteurs
+                .Include(a => a.Factures)
+                .AsNoTracking()
+                .ToListAsync();
 
             try
             {
@@ -61,7 +64,10 @@ namespace RdC.Infrastructure.Acheteurs.Persistance
 
         public async Task<Acheteur?> GetByIdAsync(int acheteurID)
         {
-            return await _dbContext.Acheteurs.FirstOrDefaultAsync(a => a.AcheteurID == acheteurID);
+            return await _dbContext.Acheteurs
+                .Include(a => a.Factures)
+                .AsNoTracking()
+                .FirstOrDefaultAsync(a => a.AcheteurID == acheteurID);
         }
     }
 }
