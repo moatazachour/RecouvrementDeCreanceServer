@@ -11,7 +11,7 @@ namespace RdC.Domain.Factures
         [JsonPropertyName("dateDeEcheance")]
         public DateOnly DateEcheance { get; private set; }
         public decimal MontantTotal { get; private set; }
-        public decimal MontantRestantDue { get; private set; }
+        public decimal MontantRestantDue { get; set; }
         public FactureStatus Status { get; set; }
         public int AcheteurID { get; private set; }
 

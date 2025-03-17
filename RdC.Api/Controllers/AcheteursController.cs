@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using RdC.Application.Acheteurs.Queries.GetAcheteur;
 using RdC.Application.Acheteurs.Queries.ListAcheteurs;
-using RdC.Contracts.Acheteurs;
+using RdC.Domain.DTO.Acheteur;
 
 namespace RdC.Api.Controllers
 {

@@ -1,7 +1,8 @@
-﻿using Ardalis.SmartEnum;
+﻿using System.Text.Json.Serialization;
 
 namespace RdC.Domain.Factures
 {
+    [JsonConverter(typeof(JsonStringEnumConverter))]
     public enum FactureStatus
     {
         Impayee,

@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using RdC.Application.Common.Interfaces;
+using RdC.Domain.DTO.Facture;
 using RdC.Domain.Factures;
 using RdC.Infrastructure.Common.Persistance;
 using System.Net.Http.Json;
@@ -72,6 +73,23 @@ namespace RdC.Infrastructure.Factures.Persistance
             }
 
             return currentFactures;
+        }
+
+        public async Task<Facture?> UpdateAsync(int FactureID, FactureUpdate factureUpdate)
+        {
+            var facture = await _dbContext.Factures.FindAsync(FactureID);
+
+            if (facture == null)
+                return null;
+
+            facture.MontantRestantDue = factureUpdate.MontantRestantDue;
+            facture.Status = factureUpdate.Status;
+
+            _dbContext.Factures.Update(facture);
+
+            await _dbContext.SaveChangesAsync();
+
+            return facture;
         }
     }
 }

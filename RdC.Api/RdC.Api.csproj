@@ -16,7 +16,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\RdC.Application\RdC.Application.csproj" />
-    <ProjectReference Include="..\RdC.Contracts\RdC.Contracts.csproj" />
     <ProjectReference Include="..\RdC.Infrastructure\RdC.Infrastructure.csproj" />
   </ItemGroup>
 

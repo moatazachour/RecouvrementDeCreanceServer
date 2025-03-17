@@ -1,11 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.13.35825.156 d17.13
+VisualStudioVersion = 17.13.35825.156
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RdC.Api", "RdC.Api\RdC.Api.csproj", "{12989D45-6E86-4E31-A904-101328CD27AD}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RdC.Contracts", "RdC.Contracts\RdC.Contracts.csproj", "{7C10C5C3-5881-4B1E-8E69-970E89BB0254}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RdC.Application", "RdC.Application\RdC.Application.csproj", "{F49DB339-1A47-4DDA-B12D-8871BCA9AB62}"
 EndProject
@@ -23,10 +21,6 @@ Global
 		{12989D45-6E86-4E31-A904-101328CD27AD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{12989D45-6E86-4E31-A904-101328CD27AD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{12989D45-6E86-4E31-A904-101328CD27AD}.Release|Any CPU.Build.0 = Release|Any CPU
-		{7C10C5C3-5881-4B1E-8E69-970E89BB0254}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7C10C5C3-5881-4B1E-8E69-970E89BB0254}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7C10C5C3-5881-4B1E-8E69-970E89BB0254}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7C10C5C3-5881-4B1E-8E69-970E89BB0254}.Release|Any CPU.Build.0 = Release|Any CPU
 		{F49DB339-1A47-4DDA-B12D-8871BCA9AB62}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{F49DB339-1A47-4DDA-B12D-8871BCA9AB62}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F49DB339-1A47-4DDA-B12D-8871BCA9AB62}.Release|Any CPU.ActiveCfg = Release|Any CPU

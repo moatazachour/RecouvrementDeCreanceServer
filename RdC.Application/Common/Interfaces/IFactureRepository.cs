@@ -1,4 +1,5 @@
-﻿using RdC.Domain.Factures;
+﻿using RdC.Domain.DTO.Facture;
+using RdC.Domain.Factures;
 
 namespace RdC.Application.Common.Interfaces
 {
@@ -6,5 +7,6 @@ namespace RdC.Application.Common.Interfaces
     {
         Task<Facture?> GetByIdAsync(int FactureID);
         Task<List<Facture>> ListAsync();
+        Task<Facture?> UpdateAsync(int FactureID, FactureUpdate factureUpdate);
     }
 }

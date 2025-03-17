@@ -1,8 +1,11 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using RdC.Application.Factures.Commands.UpdateFacture;
 using RdC.Application.Factures.Queries.GetFacture;
 using RdC.Application.Factures.Queries.ListFactures;
-using RdC.Contracts.Factures;
+using RdC.Domain.DTO.Facture;
+using RdC.Domain.Factures;
+using System.Text.RegularExpressions;
 
 namespace RdC.Api.Controllers
 {
@@ -72,6 +75,34 @@ namespace RdC.Api.Controllers
                     facture.MontantRestantDue,
                     facture.AcheteurID,
                     Enum.Parse<FactureStatus>(facture.Status.ToString())));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
+        [HttpPut("{id:int}")]
+        public async Task<IActionResult> UpdateFacture([FromRoute] int id, [FromBody] FactureUpdate factureUpdate)
+        {
+            try
+            {
+                var command = new UpdateFactureCommand(id, factureUpdate);
+                var updatedFacture = await _mediator.Send(command);
+
+                if (updatedFacture is null)
+                {
+                    return NotFound($"Facture with ID {id} not found.");
+                }
+                
+                return Ok(new FactureResponse(
+                    updatedFacture.FactureID,
+                    updatedFacture.NumFacture,
+                    updatedFacture.DateEcheance,
+                    updatedFacture.MontantTotal,
+                    updatedFacture.MontantRestantDue,
+                    updatedFacture.AcheteurID,
+                    Enum.Parse<FactureStatus>(updatedFacture.Status.ToString())));
             }
             catch (Exception ex)
             {
