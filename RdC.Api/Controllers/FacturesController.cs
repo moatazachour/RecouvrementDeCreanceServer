@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using RdC.Application.Factures.Commands.AddFactures;
 using RdC.Application.Factures.Commands.UpdateFacture;
 using RdC.Application.Factures.Queries.GetFacture;
 using RdC.Application.Factures.Queries.ListFactures;
@@ -43,6 +44,29 @@ namespace RdC.Api.Controllers
                             .ToList();
 
                 return Ok(listFactures);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
+        [HttpGet("Refresh")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> RefreshFactures()
+        {
+            try
+            {
+                var command = new AddFacturesCommand();
+
+                var isRefereshed = await _mediator.Send(command);
+
+                if (isRefereshed)
+                    return Ok("Refreshed");
+
+                return BadRequest("System de Facturation Not Running");
             }
             catch (Exception ex)
             {

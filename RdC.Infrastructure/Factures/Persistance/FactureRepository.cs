@@ -25,7 +25,7 @@ namespace RdC.Infrastructure.Factures.Persistance
             return await _dbContext.Factures.FirstOrDefaultAsync(f => f.FactureID == FactureID);
         }
 
-        public async Task<List<Facture>> ListAsync()
+        public async Task<bool> AddFacturesAsync()
         {
             var currentFactures = await _dbContext.Factures.ToListAsync();
 
@@ -57,10 +57,9 @@ namespace RdC.Infrastructure.Factures.Persistance
                         {
                             await _dbContext.Factures.AddRangeAsync(newFactures);
                             await _dbContext.SaveChangesAsync();
-
-                            currentFactures.AddRange(newFactures);
                         }
                     }
+                    return true;
                 }
                 else
                 {
@@ -72,7 +71,59 @@ namespace RdC.Infrastructure.Factures.Persistance
                 Console.WriteLine($"An error occurred while calling the external API: {ex.Message}");
             }
 
-            return currentFactures;
+            return false;
+        }
+
+        public async Task<List<Facture>> ListAsync()
+        {
+            return await _dbContext.Factures.ToListAsync();
+
+            //var currentFactures = await _dbContext.Factures.ToListAsync();
+
+            //try
+            //{
+            //    var response = await _httpClient.GetAsync("");
+
+            //    if (response.IsSuccessStatusCode)
+            //    {
+            //        var allFactures = await _httpClient.GetFromJsonAsync<List<Facture>>("");
+
+            //        if (allFactures != null)
+            //        {
+            //            var newFactures = allFactures
+            //                .Where(facture => !currentFactures.Exists(cf => cf.FactureID == facture.FactureID))
+            //                .ToList();
+
+            //            newFactures.ForEach(facture =>
+            //            {
+            //                if (facture.MontantRestantDue == decimal.Zero)
+            //                    facture.Status = FactureStatus.Payee;
+            //                else if (facture.MontantRestantDue == facture.MontantTotal)
+            //                    facture.Status = FactureStatus.Impayee;
+            //                else
+            //                    facture.Status = FactureStatus.PartiellementPayee;
+            //            });
+
+            //            if (newFactures.Any())
+            //            {
+            //                await _dbContext.Factures.AddRangeAsync(newFactures);
+            //                await _dbContext.SaveChangesAsync();
+
+            //                currentFactures.AddRange(newFactures);
+            //            }
+            //        }
+            //    }
+            //    else
+            //    {
+            //        Console.WriteLine("External API call failed. Returning current factures.");
+            //    }
+            //}
+            //catch (Exception ex)
+            //{
+            //    Console.WriteLine($"An error occurred while calling the external API: {ex.Message}");
+            //}
+
+            //return currentFactures;
         }
 
         public async Task<Facture?> UpdateAsync(int FactureID, FactureUpdate factureUpdate)

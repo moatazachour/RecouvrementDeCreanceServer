@@ -7,6 +7,7 @@ namespace RdC.Application.Common.Interfaces
     {
         Task<Facture?> GetByIdAsync(int FactureID);
         Task<List<Facture>> ListAsync();
+        Task<bool> AddFacturesAsync();
         Task<Facture?> UpdateAsync(int FactureID, FactureUpdate factureUpdate);
     }
 }
