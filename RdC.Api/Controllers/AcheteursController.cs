@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using RdC.Application.Acheteurs.Commands.AddAcheteurs;
 using RdC.Application.Acheteurs.Queries.GetAcheteur;
 using RdC.Application.Acheteurs.Queries.ListAcheteurs;
 using RdC.Domain.Acheteurs;
@@ -19,7 +20,7 @@ namespace RdC.Api.Controllers
             _mediator = mediator;
         }
 
-        [HttpGet]
+        [HttpGet()]
         [ProducesResponseType(typeof(List<AcheteurResponse>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> ListAcheteurs()
@@ -49,6 +50,28 @@ namespace RdC.Api.Controllers
                             .ToList();
 
                 return Ok(listAcheteurs);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
+        [HttpGet("Refresh")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> RefreshAcheteurs()
+        {
+            try
+            {
+                var command = new AddAcheteursCommand();
+
+                bool isRefreshed = await _mediator.Send(command);
+
+                if (isRefreshed) 
+                    return Ok("Refreshed");
+
+                return BadRequest("System de Facturation Not Running");
             }
             catch (Exception ex)
             {

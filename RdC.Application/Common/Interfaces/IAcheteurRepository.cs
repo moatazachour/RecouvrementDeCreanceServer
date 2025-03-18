@@ -6,5 +6,6 @@ namespace RdC.Application.Common.Interfaces
     {
         Task<Acheteur?> GetByIdAsync(int AcheteurID); 
         Task<List<Acheteur>> ListAsync();
+        Task<bool> AddAcheteursAsync();
     }
 }

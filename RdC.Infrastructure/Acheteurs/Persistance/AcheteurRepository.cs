@@ -21,6 +21,54 @@ namespace RdC.Infrastructure.Acheteurs.Persistance
 
         public async Task<List<Acheteur>> ListAsync()
         {
+            return await _dbContext.Acheteurs
+                .Include(a => a.Factures)
+                .AsNoTracking()
+                .ToListAsync();
+
+            //var currentAcheteurs = await _dbContext.Acheteurs
+            //    .Include(a => a.Factures)
+            //    .AsNoTracking()
+            //    .ToListAsync();
+
+            //try
+            //{
+            //    var response = await _httpClient.GetAsync("");
+
+            //    if (response.IsSuccessStatusCode)
+            //    {
+            //        var allAcheteurs = await _httpClient.GetFromJsonAsync<List<Acheteur>>("");
+
+            //        if (allAcheteurs != null)
+            //        {
+            //            var newAcheteurs = allAcheteurs
+            //                .Where(acheteur => !currentAcheteurs.Exists(ca => ca.AcheteurID == acheteur.AcheteurID))
+            //                .ToList();
+
+            //            if (newAcheteurs.Any())
+            //            {
+            //                await _dbContext.Acheteurs.AddRangeAsync(newAcheteurs);
+            //                await _dbContext.SaveChangesAsync();
+
+            //                currentAcheteurs.AddRange(newAcheteurs);
+            //            }
+            //        }
+            //    }
+            //    else
+            //    {
+            //        Console.WriteLine("External API call failed. Returning current acheteurs.");
+            //    }
+            //}
+            //catch (Exception ex)
+            //{
+            //    Console.WriteLine($"An error occurred while calling the external API: {ex.Message}");
+            //}
+
+            //return currentAcheteurs;
+        }
+
+        public async Task<bool> AddAcheteursAsync()
+        {
             var currentAcheteurs = await _dbContext.Acheteurs
                 .Include(a => a.Factures)
                 .AsNoTracking()
@@ -44,10 +92,9 @@ namespace RdC.Infrastructure.Acheteurs.Persistance
                         {
                             await _dbContext.Acheteurs.AddRangeAsync(newAcheteurs);
                             await _dbContext.SaveChangesAsync();
-
-                            currentAcheteurs.AddRange(newAcheteurs);
                         }
                     }
+                    return true;
                 }
                 else
                 {
@@ -59,7 +106,7 @@ namespace RdC.Infrastructure.Acheteurs.Persistance
                 Console.WriteLine($"An error occurred while calling the external API: {ex.Message}");
             }
 
-            return currentAcheteurs;
+            return false;
         }
 
         public async Task<Acheteur?> GetByIdAsync(int acheteurID)
