@@ -23,6 +23,9 @@ namespace RdC.Infrastructure
             services.AddHttpClient<AcheteurRepository>();
             services.AddHttpClient<FactureRepository>();
 
+            services.AddScoped<IUnitOfWork>(serviceProvider =>
+                serviceProvider.GetRequiredService<RecouvrementDBContext>());
+
             services.AddScoped<IAcheteurRepository, AcheteurRepository>();
             services.AddScoped<IFactureRepository, FactureRepository>();
 

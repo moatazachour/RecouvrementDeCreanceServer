@@ -91,7 +91,6 @@ namespace RdC.Infrastructure.Acheteurs.Persistance
                         if (newAcheteurs.Any())
                         {
                             await _dbContext.Acheteurs.AddRangeAsync(newAcheteurs);
-                            await _dbContext.SaveChangesAsync();
                         }
                     }
                     return true;

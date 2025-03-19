@@ -56,7 +56,6 @@ namespace RdC.Infrastructure.Factures.Persistance
                         if (newFactures.Any())
                         {
                             await _dbContext.Factures.AddRangeAsync(newFactures);
-                            await _dbContext.SaveChangesAsync();
                         }
                     }
                     return true;
@@ -137,8 +136,6 @@ namespace RdC.Infrastructure.Factures.Persistance
             facture.Status = factureUpdate.Status;
 
             _dbContext.Factures.Update(facture);
-
-            await _dbContext.SaveChangesAsync();
 
             return facture;
         }
