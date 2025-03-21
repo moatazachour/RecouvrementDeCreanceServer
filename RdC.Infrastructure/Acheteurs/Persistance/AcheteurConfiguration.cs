@@ -8,9 +8,12 @@ namespace RdC.Infrastructure.Acheteurs.Persistance
     {
         public void Configure(EntityTypeBuilder<Acheteur> builder)
         {
-            builder.HasKey(a => a.AcheteurID);
+            builder.HasKey(a => a.Id);
 
-            builder.Property(a => a.AcheteurID)
+            builder.Property(a => a.Id)
+                .HasColumnName("AcheteurID");
+
+            builder.Property(a => a.Id)
                 .ValueGeneratedNever();
 
             builder.Property(a => a.Nom)

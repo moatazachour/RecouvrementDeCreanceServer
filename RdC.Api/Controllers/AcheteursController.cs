@@ -33,14 +33,14 @@ namespace RdC.Api.Controllers
 
                 var listAcheteurs = listAcheteursResult.Select(acheteur =>
                             new AcheteurResponse(
-                                acheteur.AcheteurID,
+                                acheteur.Id,
                                 acheteur.Nom,
                                 acheteur.Prenom,
                                 acheteur.Adresse,
                                 acheteur.Email,
                                 acheteur.Telephone,
                                 acheteur.Factures.Select(facture => new FactureResponse(
-                                                            facture.FactureID,
+                                                            facture.Id,
                                                             facture.NumFacture,
                                                             facture.DateEcheance,
                                                             facture.MontantTotal,
@@ -97,14 +97,14 @@ namespace RdC.Api.Controllers
                 }
 
                 return Ok(new AcheteurResponse(
-                    acheteur.AcheteurID,
+                    acheteur.Id,
                     acheteur.Nom,
                     acheteur.Prenom,
                     acheteur.Adresse,
                     acheteur.Email,
                     acheteur.Telephone,
                     acheteur.Factures.Select(facture => new FactureResponse(
-                                                            facture.FactureID,
+                                                            facture.Id,
                                                             facture.NumFacture,
                                                             facture.DateEcheance,
                                                             facture.MontantTotal,

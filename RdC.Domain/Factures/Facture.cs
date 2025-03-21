@@ -1,11 +1,11 @@
-﻿using RdC.Domain.Acheteurs;
+﻿using RdC.Domain.Abstrations;
+using RdC.Domain.Acheteurs;
 using System.Text.Json.Serialization;
 
 namespace RdC.Domain.Factures
 {
-    public class Facture
+    public class Facture : Entity
     {
-        public int FactureID { get; private set; }
         public string NumFacture { get; private set; }
 
         [JsonPropertyName("dateDeEcheance")]
@@ -17,10 +17,10 @@ namespace RdC.Domain.Factures
 
         public Acheteur Acheteur { get; private set; }
 
-        public Facture(int factureID, string numFacture, DateOnly dateEcheance, decimal montantTotal,
+        public Facture(int Id, string numFacture, DateOnly dateEcheance, decimal montantTotal,
             decimal montantRestantDue, int acheteurID, FactureStatus status)
+            : base(Id)
         {
-            FactureID = factureID;
             NumFacture = numFacture;
             DateEcheance = dateEcheance;
             MontantTotal = montantTotal;
