@@ -34,7 +34,7 @@ namespace RdC.Api.Controllers
 
                 var listFactures = listFacturesResult.Select(facture =>
                             new FactureResponse(
-                                facture.FactureID,
+                                facture.Id,
                                 facture.NumFacture,
                                 facture.DateEcheance,
                                 facture.MontantTotal,
@@ -92,7 +92,7 @@ namespace RdC.Api.Controllers
                 }
 
                 return Ok(new FactureResponse(
-                    facture.FactureID,
+                    facture.Id,
                     facture.NumFacture,
                     facture.DateEcheance,
                     facture.MontantTotal,
@@ -120,7 +120,7 @@ namespace RdC.Api.Controllers
                 }
                 
                 return Ok(new FactureResponse(
-                    updatedFacture.FactureID,
+                    updatedFacture.Id,
                     updatedFacture.NumFacture,
                     updatedFacture.DateEcheance,
                     updatedFacture.MontantTotal,

@@ -22,7 +22,7 @@ namespace RdC.Infrastructure.Factures.Persistance
 
         public async Task<Facture?> GetByIdAsync(int FactureID)
         {
-            return await _dbContext.Factures.FirstOrDefaultAsync(f => f.FactureID == FactureID);
+            return await _dbContext.Factures.FirstOrDefaultAsync(f => f.Id == FactureID);
         }
 
         public async Task<bool> AddFacturesAsync()
@@ -40,7 +40,7 @@ namespace RdC.Infrastructure.Factures.Persistance
                     if (allFactures != null)
                     {
                         var newFactures = allFactures
-                            .Where(facture => !currentFactures.Exists(cf => cf.FactureID == facture.FactureID))
+                            .Where(facture => !currentFactures.Exists(cf => cf.Id == facture.Id))
                             .ToList();
 
                         newFactures.ForEach(facture =>

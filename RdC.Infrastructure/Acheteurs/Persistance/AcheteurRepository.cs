@@ -85,7 +85,7 @@ namespace RdC.Infrastructure.Acheteurs.Persistance
                     if (allAcheteurs != null)
                     {
                         var newAcheteurs = allAcheteurs
-                            .Where(acheteur => !currentAcheteurs.Exists(ca => ca.AcheteurID == acheteur.AcheteurID))
+                            .Where(acheteur => !currentAcheteurs.Exists(ca => ca.Id == acheteur.Id))
                             .ToList();
 
                         if (newAcheteurs.Any())
@@ -113,7 +113,7 @@ namespace RdC.Infrastructure.Acheteurs.Persistance
             return await _dbContext.Acheteurs
                 .Include(a => a.Factures)
                 .AsNoTracking()
-                .FirstOrDefaultAsync(a => a.AcheteurID == acheteurID);
+                .FirstOrDefaultAsync(a => a.Id == acheteurID);
         }
     }
 }

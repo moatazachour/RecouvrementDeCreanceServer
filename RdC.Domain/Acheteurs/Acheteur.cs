@@ -1,11 +1,11 @@
-﻿using RdC.Domain.Factures;
+﻿using RdC.Domain.Abstrations;
+using RdC.Domain.Factures;
 using System.Text.Json.Serialization;
 
 namespace RdC.Domain.Acheteurs
 {
-    public class Acheteur
+    public class Acheteur : Entity
     {
-        public int AcheteurID { get; private set; }
         public string Nom { get; private set; }
         public string Prenom { get; private set; }
         public string? Adresse { get; private set; }
@@ -16,9 +16,9 @@ namespace RdC.Domain.Acheteurs
         public ICollection<Facture> Factures { get; private set; }
 
 
-        public Acheteur(int acheteurID, string nom, string prenom, string? adresse, string email, string telephone)
+        public Acheteur(int Id, string nom, string prenom, string? adresse, string email, string telephone)
+            : base(Id)
         {
-            AcheteurID = acheteurID;
             Nom = nom;
             Prenom = prenom;
             Adresse = adresse;

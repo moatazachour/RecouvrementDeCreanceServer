@@ -8,9 +8,12 @@ namespace RdC.Infrastructure.Factures.Persistance
     {
         public void Configure(EntityTypeBuilder<Facture> builder)
         {
-            builder.HasKey(f => f.FactureID);
+            builder.HasKey(f => f.Id);
 
-            builder.Property(f => f.FactureID)
+            builder.Property(f => f.Id)
+                .HasColumnName("FactureID");
+
+            builder.Property(f => f.Id)
                 .ValueGeneratedNever();
 
             builder.Property(f => f.NumFacture)
