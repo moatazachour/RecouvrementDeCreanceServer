@@ -1,5 +1,6 @@
 ﻿using RdC.Domain.Abstrations;
 using RdC.Domain.Acheteurs;
+using RdC.Domain.PlanDePaiements;
 using System.Text.Json.Serialization;
 
 namespace RdC.Domain.Factures
@@ -16,6 +17,8 @@ namespace RdC.Domain.Factures
         public int AcheteurID { get; private set; }
 
         public Acheteur Acheteur { get; private set; }
+
+        public List<PlanDePaiement> PlanDePaiements { get; private set; } = new();
 
         public Facture(int Id, string numFacture, DateOnly dateEcheance, decimal montantTotal,
             decimal montantRestantDue, int acheteurID, FactureStatus status)
