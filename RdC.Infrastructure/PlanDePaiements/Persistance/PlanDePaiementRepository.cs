@@ -10,7 +10,7 @@ namespace RdC.Infrastructure.PlanDePaiements.Persistance
             throw new NotImplementedException();
         }
 
-        public Task<PlanDePaiement> GetPlanDePaiementAsync()
+        public Task<PlanDePaiement> GetPlanDePaiementAsync(int PlanID)
         {
             throw new NotImplementedException();
         }

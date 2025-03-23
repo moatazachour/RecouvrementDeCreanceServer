@@ -4,6 +4,7 @@ using RdC.Application.Common.Interfaces;
 using RdC.Infrastructure.Acheteurs.Persistance;
 using RdC.Infrastructure.Common.Persistance;
 using RdC.Infrastructure.Factures.Persistance;
+using RdC.Infrastructure.PaiementDates.Persistance;
 using RdC.Infrastructure.PlanDePaiements.Persistance;
 
 namespace RdC.Infrastructure
@@ -30,6 +31,7 @@ namespace RdC.Infrastructure
             services.AddScoped<IAcheteurRepository, AcheteurRepository>();
             services.AddScoped<IFactureRepository, FactureRepository>();
             services.AddScoped<IPlanDePaiement, PlanDePaiementRepository>();
+            services.AddScoped<IPaiementDateRepository, PaiementDateRepository>();
 
             return services;
         }
