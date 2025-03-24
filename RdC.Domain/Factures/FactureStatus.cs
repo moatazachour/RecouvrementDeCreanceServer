@@ -8,6 +8,7 @@ namespace RdC.Domain.Factures
         Impayee,
         PartiellementPayee,
         Payee,
-        EnLitige
+        EnLitige,
+        EnCoursDePaiement
     }
 }

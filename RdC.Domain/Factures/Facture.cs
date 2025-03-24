@@ -8,8 +8,6 @@ namespace RdC.Domain.Factures
     public class Facture : Entity
     {
         public string NumFacture { get; private set; }
-
-        [JsonPropertyName("dateDeEcheance")]
         public DateOnly DateEcheance { get; private set; }
         public decimal MontantTotal { get; private set; }
         public decimal MontantRestantDue { get; set; }
@@ -21,7 +19,7 @@ namespace RdC.Domain.Factures
         public List<PlanDePaiement> PlanDePaiements { get; private set; } = new();
 
         public Facture(int Id, string numFacture, DateOnly dateEcheance, decimal montantTotal,
-            decimal montantRestantDue, int acheteurID, FactureStatus status)
+            decimal montantRestantDue, int acheteurID/*, FactureStatus status*/)
             : base(Id)
         {
             NumFacture = numFacture;
@@ -29,7 +27,7 @@ namespace RdC.Domain.Factures
             MontantTotal = montantTotal;
             MontantRestantDue = montantRestantDue;
             AcheteurID = acheteurID;
-            Status = status;
+            //Status = status;
         }
 
         private Facture() { }

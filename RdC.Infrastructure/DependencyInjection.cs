@@ -1,8 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using RdC.Application.Common.Email;
 using RdC.Application.Common.Interfaces;
 using RdC.Infrastructure.Acheteurs.Persistance;
 using RdC.Infrastructure.Common.Persistance;
+using RdC.Infrastructure.Email;
 using RdC.Infrastructure.Factures.Persistance;
 using RdC.Infrastructure.PaiementDates.Persistance;
 using RdC.Infrastructure.PlanDePaiements.Persistance;
@@ -30,8 +32,10 @@ namespace RdC.Infrastructure
 
             services.AddScoped<IAcheteurRepository, AcheteurRepository>();
             services.AddScoped<IFactureRepository, FactureRepository>();
-            services.AddScoped<IPlanDePaiement, PlanDePaiementRepository>();
+            services.AddScoped<IPlanDePaiementRepository, PlanDePaiementRepository>();
             services.AddScoped<IPaiementDateRepository, PaiementDateRepository>();
+
+            services.AddTransient<IEmailService, EmailService>();
 
             return services;
         }

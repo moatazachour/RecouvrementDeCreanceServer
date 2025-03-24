@@ -1,18 +1,37 @@
-﻿using RdC.Application.Common.Interfaces;
+﻿using Microsoft.EntityFrameworkCore;
+using RdC.Application.Common.Interfaces;
 using RdC.Domain.PlanDePaiements;
+using RdC.Infrastructure.Common.Persistance;
 
 namespace RdC.Infrastructure.PlanDePaiements.Persistance
 {
-    public class PlanDePaiementRepository : IPlanDePaiement
+    public class PlanDePaiementRepository : IPlanDePaiementRepository
     {
-        public Task<bool> AddAsync()
+        private readonly RecouvrementDBContext _dbContext;
+
+        public PlanDePaiementRepository(RecouvrementDBContext dbContext)
         {
-            throw new NotImplementedException();
+            _dbContext = dbContext;
         }
 
-        public Task<PlanDePaiement> GetPlanDePaiementAsync(int PlanID)
+        public async Task<bool> AddAsync(PlanDePaiement planDePaiement)
         {
-            throw new NotImplementedException();
+            if (planDePaiement == null)
+            {
+                throw new ArgumentNullException(nameof(planDePaiement));
+            }
+
+            await _dbContext.PlanDePaiements.AddAsync(planDePaiement);
+
+            return true;
+        }
+
+        public async Task<PlanDePaiement?> GetByIdAsync(int PlanID)
+        {
+            return await _dbContext.PlanDePaiements
+                .Include(pp => pp.Factures)
+                .Include(pp => pp.PaiementsDates)
+                .FirstOrDefaultAsync(pp => pp.Id == PlanID);
         }
     }
 }
