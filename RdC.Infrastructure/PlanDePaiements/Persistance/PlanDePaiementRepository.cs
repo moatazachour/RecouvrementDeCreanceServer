@@ -26,6 +26,15 @@ namespace RdC.Infrastructure.PlanDePaiements.Persistance
             return true;
         }
 
+        public async Task<List<PlanDePaiement>> GetAllAsync()
+        {
+            return await _dbContext.PlanDePaiements
+                .Include(pp => pp.Factures)
+                .Include(pp => pp.PaiementsDates)
+                .AsNoTracking()
+                .ToListAsync();
+        }
+
         public async Task<PlanDePaiement?> GetByIdAsync(int PlanID)
         {
             return await _dbContext.PlanDePaiements

@@ -6,6 +6,8 @@ namespace RdC.Application.Common.Interfaces
     {
         Task<bool> AddAsync(PlanDePaiement planDePaiement);
 
+        Task<List<PlanDePaiement>> GetAllAsync();
+
         Task<PlanDePaiement?> GetByIdAsync(int PlanID);
     }
 }
