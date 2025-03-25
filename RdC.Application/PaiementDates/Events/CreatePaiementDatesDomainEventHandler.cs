@@ -13,15 +13,18 @@ namespace RdC.Application.PaiementDates.Events
         private IPlanDePaiementRepository _planDePaiementRepository;
         private IPaiementDateRepository _paiementDateRepository;
         private IEmailService _emailService;
+        private IAcheteurRepository _acheteurRepository;
 
         public CreatePaiementDatesDomainEventHandler(
             IPlanDePaiementRepository planDePaiementRepository,
             IPaiementDateRepository paiementDateRepository,
-            IEmailService emailService)
+            IEmailService emailService,
+            IAcheteurRepository acheteurRepository)
         {
             _planDePaiementRepository = planDePaiementRepository;
             _paiementDateRepository = paiementDateRepository;
             _emailService = emailService;
+            _acheteurRepository = acheteurRepository;
         }
 
         public async Task Handle(CreatePaiementDatesDomainEvent notification, CancellationToken cancellationToken)
@@ -33,7 +36,12 @@ namespace RdC.Application.PaiementDates.Events
 
             var paiementsDates = await _paiementDateRepository.GetByPlanIdAsync(notification.PlanID);
 
-            string acheteurEmail = plan.Factures[0].Acheteur.Email;
+            var acheteur = await _acheteurRepository.GetByIdAsync(plan.Factures[0].AcheteurID);
+
+            if (acheteur is null)
+                return;
+
+            string acheteurEmail = acheteur.Email;
 
             var emailBody = _BuildEmailBody(plan, paiementsDates);
 
