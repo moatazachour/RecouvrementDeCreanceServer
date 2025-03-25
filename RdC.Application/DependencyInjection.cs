@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using RdC.Application.Common.Dispatcher;
 
 namespace RdC.Application
 {
@@ -10,6 +11,8 @@ namespace RdC.Application
             {
                 options.RegisterServicesFromAssemblyContaining(typeof(DependencyInjection));
             });
+
+            services.AddScoped<IDomainEventDispatcher, DomainEventDispatcher>();
 
             return services;
         }

@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using RdC.Application.Common.Dispatcher;
 using RdC.Application.Common.Interfaces;
 using RdC.Domain.PaiementDates;
 using RdC.Domain.PaiementDates.Events;
@@ -11,15 +12,18 @@ namespace RdC.Application.PlanDePaiements.Events
         private IPlanDePaiementRepository _planDePaiementRepository;
         private IPaiementDateRepository _paiementDateRepository;
         private IUnitOfWork _unitOfWork;
+        private IDomainEventDispatcher _domainEventDispatcher;
 
         public CreatePlanDomainEventHandler(
             IPlanDePaiementRepository planDePaiementRepository, 
             IPaiementDateRepository paiementDateRepository, 
-            IUnitOfWork unitOfWork)
+            IUnitOfWork unitOfWork,
+            IDomainEventDispatcher domainEventDispatcher)
         {
             _planDePaiementRepository = planDePaiementRepository;
             _paiementDateRepository = paiementDateRepository;
             _unitOfWork = unitOfWork;
+            _domainEventDispatcher = domainEventDispatcher;
         }
 
         public async Task Handle(CreatePlanDomainEvent notification, CancellationToken cancellationToken)
@@ -47,6 +51,8 @@ namespace RdC.Application.PlanDePaiements.Events
             await _unitOfWork.CommitChangesAsync();
 
             listPaiementDates[0].RaiseDomainEvent(new CreatePaiementDatesDomainEvent(notification.PlanID));
+
+            await _domainEventDispatcher.DispatchEventsAsync(listPaiementDates[0]);
         }
     }
 }
