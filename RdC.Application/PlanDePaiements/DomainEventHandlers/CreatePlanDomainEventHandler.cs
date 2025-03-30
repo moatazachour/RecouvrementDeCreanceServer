@@ -5,7 +5,7 @@ using RdC.Domain.PaiementDates;
 using RdC.Domain.PaiementDates.Events;
 using RdC.Domain.PlanDePaiements.Events;
 
-namespace RdC.Application.PlanDePaiements.Events
+namespace RdC.Application.PlanDePaiements.DomainEventHandlers
 {
     internal sealed class CreatePlanDomainEventHandler : INotificationHandler<CreatePlanDomainEvent>
     {
@@ -43,7 +43,8 @@ namespace RdC.Application.PlanDePaiements.Events
             {
                 listPaiementDates.Add(PaiementDate.Create(
                     notification.PlanID,
-                    DateTime.Now.AddMonths(i + 1)));
+                    DateTime.Now.AddMonths(i + 1),
+                    plan.MontantDeChaqueEcheance));
             }
 
             await _paiementDateRepository.AddAsync(listPaiementDates);

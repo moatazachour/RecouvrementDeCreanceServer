@@ -31,7 +31,6 @@ namespace RdC.Infrastructure.PlanDePaiements.Persistance
             return await _dbContext.PlanDePaiements
                 .Include(pp => pp.Factures)
                 .Include(pp => pp.PaiementsDates)
-                .AsNoTracking()
                 .ToListAsync();
         }
 

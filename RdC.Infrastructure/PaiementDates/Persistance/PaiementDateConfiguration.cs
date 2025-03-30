@@ -17,7 +17,23 @@ namespace RdC.Infrastructure.PaiementDates.Persistance
                 .HasColumnType("date")
                 .IsRequired();
 
+            builder.Property(d => d.MontantDeEcheance)
+                .HasColumnType("decimal(18, 3)")
+                .IsRequired();
+
+            builder.Property(d => d.MontantPayee)
+                .HasColumnType("decimal(18, 3)")
+                .IsRequired();
+
+            builder.Property(d => d.MontantDue)
+                .HasColumnType("decimal(18, 3)")
+                .IsRequired();
+
             builder.Property(d => d.IsPaid)
+                .HasColumnType("bit")
+                .IsRequired();
+
+            builder.Property(d => d.IsLocked)
                 .HasColumnType("bit")
                 .IsRequired();
 

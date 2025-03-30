@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RdC.Infrastructure.Common.Persistance;
 
@@ -11,9 +12,11 @@ using RdC.Infrastructure.Common.Persistance;
 namespace RdC.Infrastructure.Migrations
 {
     [DbContext(typeof(RecouvrementDBContext))]
-    partial class RecouvrementDBContextModelSnapshot : ModelSnapshot
+    [Migration("20250329210029_AddPaiementInfoToPaiementDateTable")]
+    partial class AddPaiementInfoToPaiementDateTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -142,31 +145,6 @@ namespace RdC.Infrastructure.Migrations
                     b.ToTable("PaiementDates");
                 });
 
-            modelBuilder.Entity("RdC.Domain.Paiements.Paiement", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("PaiementID");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("DateDePaiement")
-                        .HasColumnType("datetime");
-
-                    b.Property<decimal>("MontantPayee")
-                        .HasColumnType("decimal(18, 3)");
-
-                    b.Property<int>("PlanID")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("PlanID");
-
-                    b.ToTable("Paiements");
-                });
-
             modelBuilder.Entity("RdC.Domain.PlanDePaiements.PlanDePaiement", b =>
                 {
                     b.Property<int>("Id")
@@ -238,17 +216,6 @@ namespace RdC.Infrastructure.Migrations
                     b.Navigation("PlanDePaiement");
                 });
 
-            modelBuilder.Entity("RdC.Domain.Paiements.Paiement", b =>
-                {
-                    b.HasOne("RdC.Domain.PlanDePaiements.PlanDePaiement", "PlanDePaiement")
-                        .WithMany("Paiements")
-                        .HasForeignKey("PlanID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("PlanDePaiement");
-                });
-
             modelBuilder.Entity("RdC.Domain.Acheteurs.Acheteur", b =>
                 {
                     b.Navigation("Factures");
@@ -256,8 +223,6 @@ namespace RdC.Infrastructure.Migrations
 
             modelBuilder.Entity("RdC.Domain.PlanDePaiements.PlanDePaiement", b =>
                 {
-                    b.Navigation("Paiements");
-
                     b.Navigation("PaiementsDates");
                 });
 #pragma warning restore 612, 618

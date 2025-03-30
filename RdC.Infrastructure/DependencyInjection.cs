@@ -7,6 +7,7 @@ using RdC.Infrastructure.Common.Persistance;
 using RdC.Infrastructure.Email;
 using RdC.Infrastructure.Factures.Persistance;
 using RdC.Infrastructure.PaiementDates.Persistance;
+using RdC.Infrastructure.Paiements.Persistance;
 using RdC.Infrastructure.PlanDePaiements.Persistance;
 
 namespace RdC.Infrastructure
@@ -34,6 +35,7 @@ namespace RdC.Infrastructure
             services.AddScoped<IFactureRepository, FactureRepository>();
             services.AddScoped<IPlanDePaiementRepository, PlanDePaiementRepository>();
             services.AddScoped<IPaiementDateRepository, PaiementDateRepository>();
+            services.AddScoped<IPaiementRepository, PaiementRepository>();
 
             services.AddTransient<IEmailService, EmailService>();
 

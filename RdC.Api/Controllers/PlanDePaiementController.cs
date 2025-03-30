@@ -48,9 +48,9 @@ namespace RdC.Api.Controllers
 
             try
             {
-                var listDePlanDePaiement = await _mediator.Send(query);
+                var plan = await _mediator.Send(query);
 
-                return Ok(listDePlanDePaiement);
+                return Ok(plan);
             }
             catch (Exception ex)
             {

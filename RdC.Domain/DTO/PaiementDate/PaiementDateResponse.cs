@@ -4,5 +4,9 @@
         int DateID,
         int PlanID,
         DateOnly EcheanceDate,
-        bool IsPaid);
+        decimal MontantDeEcheance,
+        decimal MontantPayee,
+        decimal MontantDue,
+        bool IsPaid,
+        bool IsLocked);
 }

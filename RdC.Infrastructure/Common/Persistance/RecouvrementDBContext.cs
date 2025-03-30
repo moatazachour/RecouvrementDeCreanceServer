@@ -3,6 +3,7 @@ using RdC.Application.Common.Interfaces;
 using RdC.Domain.Acheteurs;
 using RdC.Domain.Factures;
 using RdC.Domain.PaiementDates;
+using RdC.Domain.Paiements;
 using RdC.Domain.PlanDePaiements;
 using System.Reflection;
 
@@ -14,6 +15,7 @@ namespace RdC.Infrastructure.Common.Persistance
         public DbSet<Facture> Factures { get; set; }
         public DbSet<PlanDePaiement> PlanDePaiements { get; set; }
         public DbSet<PaiementDate> PaiementDates { get; set; }
+        public DbSet<Paiement> Paiements { get; set; }
 
         public RecouvrementDBContext(DbContextOptions options) : base(options)
         {

@@ -39,7 +39,11 @@ namespace RdC.Application.PlanDePaiements.Queries.ListPlans
                                                                                 paiementDate.Id,
                                                                                 paiementDate.PlanID,
                                                                                 paiementDate.EcheanceDate,
-                                                                                paiementDate.IsPaid)).ToList()))
+                                                                                paiementDate.MontantDeEcheance,
+                                                                                paiementDate.MontantPayee,
+                                                                                paiementDate.MontantDue,
+                                                                                paiementDate.IsPaid,
+                                                                                paiementDate.IsLocked)).ToList()))
                                     .ToList();
 
             return listDePlanResponse;

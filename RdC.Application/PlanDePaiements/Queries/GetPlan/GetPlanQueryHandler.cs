@@ -3,7 +3,6 @@ using RdC.Application.Common.Interfaces;
 using RdC.Domain.DTO.Facture;
 using RdC.Domain.DTO.PaiementDate;
 using RdC.Domain.DTO.PlanDePaiement;
-using RdC.Domain.PlanDePaiements;
 
 namespace RdC.Application.PlanDePaiements.Queries.GetPlan
 {
@@ -20,7 +19,7 @@ namespace RdC.Application.PlanDePaiements.Queries.GetPlan
         {
             var planDePaiement = await _planDePaiementRepository.GetByIdAsync(request.PlanID);
 
-            if (planDePaiement is null) 
+            if (planDePaiement is null)
                 return null;
 
             return new PlanDePaiementResponse(
@@ -43,7 +42,11 @@ namespace RdC.Application.PlanDePaiements.Queries.GetPlan
                                                             paiementDate.Id,
                                                             paiementDate.PlanID,
                                                             paiementDate.EcheanceDate,
-                                                            paiementDate.IsPaid)).ToList());
+                                                            paiementDate.MontantDeEcheance,
+                                                            paiementDate.MontantPayee,
+                                                            paiementDate.MontantDue,
+                                                            paiementDate.IsPaid,
+                                                            paiementDate.IsLocked)).ToList());
         }
     }
 }

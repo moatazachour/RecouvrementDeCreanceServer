@@ -6,7 +6,7 @@ using RdC.Domain.PaiementDates.Events;
 using RdC.Domain.PlanDePaiements;
 using System.Text;
 
-namespace RdC.Application.PaiementDates.Events
+namespace RdC.Application.PaiementDates.DomainEventHandlers
 {
     internal sealed class CreatePaiementDatesDomainEventHandler : INotificationHandler<CreatePaiementDatesDomainEvent>
     {
@@ -58,7 +58,7 @@ namespace RdC.Application.PaiementDates.Events
             sb.AppendLine($"Bonjour,");
             sb.AppendLine();
             sb.AppendLine($"Votre plan de paiement a été créé avec les détails suivants :");
-            sb.AppendLine($"- Montant Total : {plan.MontantTotal} €");
+            sb.AppendLine($"- Montant Total : {plan.MontantTotal} TND");
             sb.AppendLine($"- Nombre d'échéances : {plan.NombreDeEcheances}");
             sb.AppendLine();
             sb.AppendLine("Voici vos dates de paiement :");

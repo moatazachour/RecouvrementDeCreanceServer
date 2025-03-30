@@ -1,6 +1,7 @@
 ﻿using RdC.Domain.Abstrations;
 using RdC.Domain.Factures;
 using RdC.Domain.PaiementDates;
+using RdC.Domain.Paiements;
 using System.Text.Json.Serialization;
 
 namespace RdC.Domain.PlanDePaiements
@@ -31,12 +32,15 @@ namespace RdC.Domain.PlanDePaiements
         [JsonIgnore]
         public List<PaiementDate> PaiementsDates = new();
 
+        [JsonIgnore]
+        public List<Paiement> Paiements = new();
+
         public decimal MontantTotal { get; private set; }
         public byte NombreDeEcheances { get; set; }
         public decimal MontantDeChaqueEcheance {  get; private set; }
-        public decimal MontantRestant { get; private set; }
+        public decimal MontantRestant { get; set; }
         public DateTime CreationDate { get; private set; }
-        public PlanStatus PlanStatus { get; private set; }
+        public PlanStatus PlanStatus { get; set; }
 
         public static PlanDePaiement Create(
             decimal montantTotal,
