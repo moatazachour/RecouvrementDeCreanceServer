@@ -48,15 +48,16 @@ namespace RdC.Application.Paiements.Commands.CreatePaiement
                 }
             }
 
-            paiementDate.MontantPayee += request.createPaiementRequest.MontantPayee;
+            paiementDate.MontantPayee += montantPayee;
 
-            if (paiementDate.MontantPayee == paiementDate.MontantDue)
+            paiementDate.MontantDue -= montantPayee;
+
+            if (paiementDate.MontantDue == 0)
             {
                 paiementDate.IsLocked = true;
                 paiementDate.IsPaid = true;
             }
 
-            paiementDate.MontantDue -= request.createPaiementRequest.MontantPayee;
 
             var paiement = Paiement.CreatePaiement(
                 planDePaiement.Id,
