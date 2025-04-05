@@ -14,16 +14,12 @@ namespace RdC.Infrastructure
 {
     public static class DependencyInjection
     {
-        public static IServiceCollection AddInfrastructure(this IServiceCollection services)
+        public static IServiceCollection AddInfrastructure(
+            this IServiceCollection services,
+            string connectionString)
         {
             services.AddDbContext<RecouvrementDBContext>(options =>
-                    options.UseSqlServer("""
-                            Server=localhost;
-                            Database=RdC;
-                            User Id=sa;
-                            Password=sa123456;
-                            TrustServerCertificate=True;
-                        """));
+                    options.UseSqlServer(connectionString));
 
             services.AddHttpClient<AcheteurRepository>();
             services.AddHttpClient<FactureRepository>();

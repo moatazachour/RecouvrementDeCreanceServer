@@ -10,9 +10,12 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+string connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
+    ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
+
 builder.Services
     .AddApplication()
-    .AddInfrastructure();
+    .AddInfrastructure(connectionString);
 
 var app = builder.Build();
 
