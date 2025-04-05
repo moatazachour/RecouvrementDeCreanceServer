@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using RdC.Application.Common.Interfaces;
 using RdC.Domain.Acheteurs;
+using RdC.Domain.DTO.Acheteur;
 using RdC.Infrastructure.Common.Persistance;
 using System.Net.Http.Json;
 
@@ -25,54 +26,11 @@ namespace RdC.Infrastructure.Acheteurs.Persistance
                 .Include(a => a.Factures)
                 .AsNoTracking()
                 .ToListAsync();
-
-            //var currentAcheteurs = await _dbContext.Acheteurs
-            //    .Include(a => a.Factures)
-            //    .AsNoTracking()
-            //    .ToListAsync();
-
-            //try
-            //{
-            //    var response = await _httpClient.GetAsync("");
-
-            //    if (response.IsSuccessStatusCode)
-            //    {
-            //        var allAcheteurs = await _httpClient.GetFromJsonAsync<List<Acheteur>>("");
-
-            //        if (allAcheteurs != null)
-            //        {
-            //            var newAcheteurs = allAcheteurs
-            //                .Where(acheteur => !currentAcheteurs.Exists(ca => ca.AcheteurID == acheteur.AcheteurID))
-            //                .ToList();
-
-            //            if (newAcheteurs.Any())
-            //            {
-            //                await _dbContext.Acheteurs.AddRangeAsync(newAcheteurs);
-            //                await _dbContext.SaveChangesAsync();
-
-            //                currentAcheteurs.AddRange(newAcheteurs);
-            //            }
-            //        }
-            //    }
-            //    else
-            //    {
-            //        Console.WriteLine("External API call failed. Returning current acheteurs.");
-            //    }
-            //}
-            //catch (Exception ex)
-            //{
-            //    Console.WriteLine($"An error occurred while calling the external API: {ex.Message}");
-            //}
-
-            //return currentAcheteurs;
         }
 
         public async Task<bool> AddAcheteursAsync()
         {
-            var currentAcheteurs = await _dbContext.Acheteurs
-                .Include(a => a.Factures)
-                .AsNoTracking()
-                .ToListAsync();
+            var currentAcheteurs = await _dbContext.Acheteurs.ToListAsync();
 
             try
             {
@@ -80,12 +38,19 @@ namespace RdC.Infrastructure.Acheteurs.Persistance
 
                 if (response.IsSuccessStatusCode)
                 {
-                    var allAcheteurs = await _httpClient.GetFromJsonAsync<List<Acheteur>>("");
+                    var allAcheteursDto = await _httpClient.GetFromJsonAsync<List<AcheteurDtoForExternalAPI>>("");
 
-                    if (allAcheteurs != null)
+                    if (allAcheteursDto != null)
                     {
-                        var newAcheteurs = allAcheteurs
-                            .Where(acheteur => !currentAcheteurs.Exists(ca => ca.Id == acheteur.Id))
+                        var newAcheteurs = allAcheteursDto
+                            .Where(dto => !currentAcheteurs.Exists(ca => ca.Id == dto.AcheteurID))
+                            .Select(dto => new Acheteur(
+                                                dto.AcheteurID,
+                                                dto.Nom,
+                                                dto.Prenom,
+                                                dto.Adresse,
+                                                dto.Email,
+                                                dto.Telephone))
                             .ToList();
 
                         if (newAcheteurs.Any())

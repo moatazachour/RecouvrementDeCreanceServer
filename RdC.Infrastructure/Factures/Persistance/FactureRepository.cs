@@ -1,8 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using RdC.Application.Common.Interfaces;
+using RdC.Domain.Acheteurs;
 using RdC.Domain.DTO.Facture;
 using RdC.Domain.Factures;
 using RdC.Infrastructure.Common.Persistance;
+using System.Linq;
 using System.Net.Http.Json;
 
 namespace RdC.Infrastructure.Factures.Persistance
@@ -35,12 +37,19 @@ namespace RdC.Infrastructure.Factures.Persistance
 
                 if (response.IsSuccessStatusCode)
                 {
-                    var allFactures = await _httpClient.GetFromJsonAsync<List<Facture>>("");
+                    var allFacturesDto = await _httpClient.GetFromJsonAsync<List<FactureDtoForExternalAPI>>("");
 
-                    if (allFactures != null)
+                    if (allFacturesDto != null)
                     {
-                        var newFactures = allFactures
-                            .Where(facture => !currentFactures.Exists(cf => cf.Id == facture.Id))
+                        var newFactures = allFacturesDto
+                            .Where(dto => !currentFactures.Exists(cf => cf.Id == dto.FactureID))
+                            .Select(dto => new Facture(
+                                                dto.FactureID,
+                                                dto.NumFacture,
+                                                dto.DateDeEcheance,
+                                                dto.MontantTotal,
+                                                dto.MontantRestantDue,
+                                                dto.AcheteurID))
                             .ToList();
 
                         newFactures.ForEach(facture =>
@@ -76,53 +85,6 @@ namespace RdC.Infrastructure.Factures.Persistance
         public async Task<List<Facture>> ListAsync()
         {
             return await _dbContext.Factures.ToListAsync();
-
-            //var currentFactures = await _dbContext.Factures.ToListAsync();
-
-            //try
-            //{
-            //    var response = await _httpClient.GetAsync("");
-
-            //    if (response.IsSuccessStatusCode)
-            //    {
-            //        var allFactures = await _httpClient.GetFromJsonAsync<List<Facture>>("");
-
-            //        if (allFactures != null)
-            //        {
-            //            var newFactures = allFactures
-            //                .Where(facture => !currentFactures.Exists(cf => cf.FactureID == facture.FactureID))
-            //                .ToList();
-
-            //            newFactures.ForEach(facture =>
-            //            {
-            //                if (facture.MontantRestantDue == decimal.Zero)
-            //                    facture.Status = FactureStatus.Payee;
-            //                else if (facture.MontantRestantDue == facture.MontantTotal)
-            //                    facture.Status = FactureStatus.Impayee;
-            //                else
-            //                    facture.Status = FactureStatus.PartiellementPayee;
-            //            });
-
-            //            if (newFactures.Any())
-            //            {
-            //                await _dbContext.Factures.AddRangeAsync(newFactures);
-            //                await _dbContext.SaveChangesAsync();
-
-            //                currentFactures.AddRange(newFactures);
-            //            }
-            //        }
-            //    }
-            //    else
-            //    {
-            //        Console.WriteLine("External API call failed. Returning current factures.");
-            //    }
-            //}
-            //catch (Exception ex)
-            //{
-            //    Console.WriteLine($"An error occurred while calling the external API: {ex.Message}");
-            //}
-
-            //return currentFactures;
         }
 
         public async Task<Facture?> UpdateAsync(int FactureID, FactureUpdate factureUpdate)
@@ -138,6 +100,14 @@ namespace RdC.Infrastructure.Factures.Persistance
             _dbContext.Factures.Update(facture);
 
             return facture;
+        }
+
+        public async Task<List<Facture>> GetByIdsAsync(List<int> factureIDs)
+        {
+            var factures = await _dbContext.Factures.Where(
+                f => factureIDs.Contains(f.Id)).ToListAsync();
+
+            return factures;
         }
     }
 }
