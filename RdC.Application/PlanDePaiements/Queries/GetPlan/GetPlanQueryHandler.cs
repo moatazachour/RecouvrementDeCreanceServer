@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using RdC.Application.Common.Interfaces;
 using RdC.Domain.DTO.Facture;
+using RdC.Domain.DTO.Paiement;
 using RdC.Domain.DTO.PaiementDate;
 using RdC.Domain.DTO.PlanDePaiement;
 
@@ -46,7 +47,8 @@ namespace RdC.Application.PlanDePaiements.Queries.GetPlan
                                                             paiementDate.MontantPayee,
                                                             paiementDate.MontantDue,
                                                             paiementDate.IsPaid,
-                                                            paiementDate.IsLocked)).ToList());
+                                                            paiementDate.IsLocked
+                                                            )).ToList());
         }
     }
 }

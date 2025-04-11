@@ -10,29 +10,29 @@ namespace RdC.Application.Paiements.Commands.CreatePaiement
     internal sealed class CreatePaiementCommandHandler : IRequestHandler<CreatePaiementCommand, int>
     {
         private readonly IPaiementRepository _paiementRepository;
-        private readonly IPlanDePaiementRepository _planDePaiementRepository;
         private readonly IPaiementDateRepository _paiementDateRepository;
+        private readonly IPlanDePaiementRepository _planDePaiementRepository;
         private readonly IDomainEventDispatcher _domainEventDispatcher;
         private readonly IUnitOfWork _unitOfWork;
 
         public CreatePaiementCommandHandler(
             IPaiementRepository paiementRepository, 
-            IPlanDePaiementRepository planDePaiementRepository, 
             IPaiementDateRepository paiementDateRepository,
             IDomainEventDispatcher domainEventDispatcher,
-            IUnitOfWork unitOfWork)
+            IUnitOfWork unitOfWork,
+            IPlanDePaiementRepository planDePaiementRepository)
         {
             _paiementRepository = paiementRepository;
-            _planDePaiementRepository = planDePaiementRepository;
             _paiementDateRepository = paiementDateRepository;
             _domainEventDispatcher = domainEventDispatcher;
             _unitOfWork = unitOfWork;
+            _planDePaiementRepository = planDePaiementRepository;
         }
 
         public async Task<int> Handle(CreatePaiementCommand request, CancellationToken cancellationToken)
         {
             var paiementDate = await _paiementDateRepository.GetByIdAsync(request.createPaiementRequest.PaiementDateID);
-            var planDePaiement = await _planDePaiementRepository.GetByIdAsync(request.createPaiementRequest.PlanID);
+            var planDePaiement = await _planDePaiementRepository.GetByIdAsync(paiementDate.PlanDePaiement.Id);
 
             decimal montantPayee = request.createPaiementRequest.MontantPayee;
 
@@ -60,7 +60,7 @@ namespace RdC.Application.Paiements.Commands.CreatePaiement
 
 
             var paiement = Paiement.CreatePaiement(
-                planDePaiement.Id,
+                paiementDate.Id,
                 montantPayee,
                 DateTime.Now);
 

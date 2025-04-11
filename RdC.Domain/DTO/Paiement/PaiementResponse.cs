@@ -2,7 +2,7 @@
 {
     public record PaiementResponse(
         int PaiementID,
-        int PlanID,
+        int PaiementDateID,
         decimal MontantPayee,
         DateTime DateDePaiement);
 }

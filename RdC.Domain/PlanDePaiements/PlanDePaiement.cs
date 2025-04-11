@@ -32,9 +32,6 @@ namespace RdC.Domain.PlanDePaiements
         [JsonIgnore]
         public List<PaiementDate> PaiementsDates = new();
 
-        [JsonIgnore]
-        public List<Paiement> Paiements = new();
-
         public decimal MontantTotal { get; private set; }
         public byte NombreDeEcheances { get; set; }
         public decimal MontantDeChaqueEcheance {  get; private set; }

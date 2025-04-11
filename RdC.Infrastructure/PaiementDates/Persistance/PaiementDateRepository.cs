@@ -23,7 +23,10 @@ namespace RdC.Infrastructure.PaiementDates.Persistance
 
         public async Task<PaiementDate?> GetByIdAsync(int DateDeEcheeanceID)
         {
-            return await _dbContext.PaiementDates.FindAsync(DateDeEcheeanceID);
+            return await _dbContext.PaiementDates
+                .Include(pd => pd.PlanDePaiement)
+                .Include(pd => pd.Paiements)
+                .FirstOrDefaultAsync(pd => pd.Id == DateDeEcheeanceID);
         }
 
         public async Task<List<PaiementDate>> GetByPlanIdAsync(int PlanID)
