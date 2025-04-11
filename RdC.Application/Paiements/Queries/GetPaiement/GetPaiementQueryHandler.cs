@@ -22,7 +22,7 @@ namespace RdC.Application.Paiements.Queries.GetPaiement
 
             return new PaiementResponse(
                 paiement.Id,
-                paiement.PlanID,
+                paiement.PaiementDateID,
                 paiement.MontantPayee,
                 paiement.DateDePaiement);
         }

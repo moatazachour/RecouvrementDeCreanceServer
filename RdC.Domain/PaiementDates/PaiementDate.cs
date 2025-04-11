@@ -1,5 +1,7 @@
 ﻿using RdC.Domain.Abstrations;
+using RdC.Domain.Paiements;
 using RdC.Domain.PlanDePaiements;
+using System.Text.Json.Serialization;
 
 namespace RdC.Domain.PaiementDates
 {
@@ -27,6 +29,9 @@ namespace RdC.Domain.PaiementDates
 
         public int PlanID { get; private set; }
         public PlanDePaiement PlanDePaiement { get; private set; }
+
+        [JsonIgnore]
+        public List<Paiement> Paiements { get; private set; }
 
         public DateOnly EcheanceDate { get; set; }
         public decimal MontantDeEcheance {  get; private set; }

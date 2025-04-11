@@ -17,7 +17,6 @@ namespace RdC.Infrastructure.Paiements.Persistance
         public async Task<Paiement?> GetByIdAsync(int paiementId)
         {
             return await _dbContext.Paiements
-                .Include(p => p.PlanDePaiement)
                 .FirstOrDefaultAsync(p => p.Id == paiementId);
         }
 

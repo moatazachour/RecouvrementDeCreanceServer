@@ -21,9 +21,9 @@ namespace RdC.Infrastructure.Paiements.Persistance
                 .HasColumnType("datetime")
                 .IsRequired();
 
-            builder.HasOne(p => p.PlanDePaiement)
-                .WithMany(pp => pp.Paiements)
-                .HasForeignKey(p => p.PlanID);
+            builder.HasOne(p => p.PaiementDate)
+                .WithMany(pd => pd.Paiements)
+                .HasForeignKey(p => p.PaiementDateID);
         }
     }
 }

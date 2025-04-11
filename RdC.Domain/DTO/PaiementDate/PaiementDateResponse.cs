@@ -1,4 +1,6 @@
-﻿namespace RdC.Domain.DTO.PaiementDate
+﻿using RdC.Domain.DTO.Paiement;
+
+namespace RdC.Domain.DTO.PaiementDate
 {
     public record PaiementDateResponse(
         int DateID,
@@ -8,5 +10,6 @@
         decimal MontantPayee,
         decimal MontantDue,
         bool IsPaid,
-        bool IsLocked);
+        bool IsLocked,
+        List<PaiementResponse> PaiementResponses = null!);
 }
