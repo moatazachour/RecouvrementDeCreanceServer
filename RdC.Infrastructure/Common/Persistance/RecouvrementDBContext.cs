@@ -5,6 +5,7 @@ using RdC.Domain.Factures;
 using RdC.Domain.PaiementDates;
 using RdC.Domain.Paiements;
 using RdC.Domain.PlanDePaiements;
+using RdC.Domain.Relances;
 using System.Reflection;
 
 namespace RdC.Infrastructure.Common.Persistance
@@ -16,6 +17,9 @@ namespace RdC.Infrastructure.Common.Persistance
         public DbSet<PlanDePaiement> PlanDePaiements { get; set; }
         public DbSet<PaiementDate> PaiementDates { get; set; }
         public DbSet<Paiement> Paiements { get; set; }
+        public DbSet<Relance> Relances { get; set; }
+        public DbSet<EmailRelance> EmailRelances { get; set; }
+        public DbSet<SMSRelance> SMSRelances { get; set; }
 
         public RecouvrementDBContext(DbContextOptions options) : base(options)
         {

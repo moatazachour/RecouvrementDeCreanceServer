@@ -1,5 +1,6 @@
 using RdC.Application;
 using RdC.Infrastructure;
+using RdC.WorkerService;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,6 +17,9 @@ string connectionString = builder.Configuration.GetConnectionString("DefaultConn
 builder.Services
     .AddApplication()
     .AddInfrastructure(connectionString);
+
+// Worker Service
+builder.Services.AddHostedService<PaymentReminderService>();
 
 var app = builder.Build();
 

@@ -9,5 +9,13 @@ namespace RdC.Application.Common.Interfaces
         Task<PaiementDate?> GetByIdAsync(int DateDeEcheeanceID);
 
         Task<List<PaiementDate>> GetByPlanIdAsync(int PlanID);
+
+        Task<List<PaiementDate>> GetTodaysAsync();
+
+        Task<List<PaiementDate>> GetAllPreviousPaiementDateAsync(int PlanID);
+
+        Task<PaiementDate?> GetPreviousPaiementDateAsync(int currentPaiementDateID);
+
+        Task<bool> UpdateAsync(PaiementDate paiementDate);
     }
 }

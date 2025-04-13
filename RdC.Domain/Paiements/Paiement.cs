@@ -37,5 +37,7 @@ namespace RdC.Domain.Paiements
 
             return paiement;
         }
+
+        private Paiement() { }
     }
 }

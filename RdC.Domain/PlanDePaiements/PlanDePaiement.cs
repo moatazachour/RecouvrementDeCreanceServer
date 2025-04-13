@@ -2,6 +2,7 @@
 using RdC.Domain.Factures;
 using RdC.Domain.PaiementDates;
 using RdC.Domain.Paiements;
+using RdC.Domain.PlanDePaiements.Events;
 using System.Text.Json.Serialization;
 
 namespace RdC.Domain.PlanDePaiements
@@ -57,6 +58,15 @@ namespace RdC.Domain.PlanDePaiements
             return plan;
         }
 
+        public PlanDePaiement Desactivate(int missedPaiementsCount)
+        {
+            PlanStatus = PlanStatus.Annule;
+
+            RaiseDomainEvent(new DesactivatePlanDomainEvent(Id, missedPaiementsCount));
+
+            return this;
+        }
+
         public void AddFactures(List<Facture> factures)
         {
             foreach (var facture in factures)
@@ -65,5 +75,7 @@ namespace RdC.Domain.PlanDePaiements
                     Factures.Add(facture);
             }
         }
+
+        private PlanDePaiement() { }
     }
 }

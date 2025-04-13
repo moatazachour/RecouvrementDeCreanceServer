@@ -43,7 +43,7 @@ namespace RdC.Application.PaiementDates.DomainEventHandlers
 
             string acheteurEmail = acheteur.Email;
 
-            var emailBody = _BuildEmailBody(plan, paiementsDates);
+            string emailBody = _BuildEmailBody(plan, paiementsDates);
 
             await _emailService.SendEmailAsync(
                 to: acheteurEmail,
