@@ -1,6 +1,7 @@
 ﻿using RdC.Domain.Abstrations;
 using RdC.Domain.Paiements;
 using RdC.Domain.PlanDePaiements;
+using RdC.Domain.Relances;
 using System.Text.Json.Serialization;
 
 namespace RdC.Domain.PaiementDates
@@ -40,6 +41,9 @@ namespace RdC.Domain.PaiementDates
         public bool IsPaid { get; set; }
         public bool IsLocked { get; set; }
 
+        [JsonIgnore]
+        public List<Relance> Relances = new();
+
 
         public static PaiementDate Create(
             int PlanID,
@@ -58,5 +62,7 @@ namespace RdC.Domain.PaiementDates
 
             return paiementDate;
         }
+
+        private PaiementDate() { }
     }
 }

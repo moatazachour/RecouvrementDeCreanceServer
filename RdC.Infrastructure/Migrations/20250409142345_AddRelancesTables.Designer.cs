@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RdC.Infrastructure.Common.Persistance;
 
@@ -11,9 +12,11 @@ using RdC.Infrastructure.Common.Persistance;
 namespace RdC.Infrastructure.Migrations
 {
     [DbContext(typeof(RecouvrementDBContext))]
-    partial class RecouvrementDBContextModelSnapshot : ModelSnapshot
+    [Migration("20250409142345_AddRelancesTables")]
+    partial class AddRelancesTables
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -157,12 +160,12 @@ namespace RdC.Infrastructure.Migrations
                     b.Property<decimal>("MontantPayee")
                         .HasColumnType("decimal(18, 3)");
 
-                    b.Property<int>("PaiementDateID")
+                    b.Property<int>("PlanID")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("PaiementDateID");
+                    b.HasIndex("PlanID");
 
                     b.ToTable("Paiements");
                 });
@@ -302,13 +305,13 @@ namespace RdC.Infrastructure.Migrations
 
             modelBuilder.Entity("RdC.Domain.Paiements.Paiement", b =>
                 {
-                    b.HasOne("RdC.Domain.PaiementDates.PaiementDate", "PaiementDate")
+                    b.HasOne("RdC.Domain.PlanDePaiements.PlanDePaiement", "PlanDePaiement")
                         .WithMany("Paiements")
-                        .HasForeignKey("PaiementDateID")
+                        .HasForeignKey("PlanID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("PaiementDate");
+                    b.Navigation("PlanDePaiement");
                 });
 
             modelBuilder.Entity("RdC.Domain.Relances.Relance", b =>
@@ -353,10 +356,7 @@ namespace RdC.Infrastructure.Migrations
             modelBuilder.Entity("RdC.Domain.PlanDePaiements.PlanDePaiement", b =>
                 {
                     b.Navigation("Paiements");
-                });
 
-            modelBuilder.Entity("RdC.Domain.PlanDePaiements.PlanDePaiement", b =>
-                {
                     b.Navigation("PaiementsDates");
                 });
 #pragma warning restore 612, 618
