@@ -3,6 +3,7 @@ using RdC.Application.Common.Dispatcher;
 using RdC.Application.Common.Interfaces;
 using RdC.Domain.PaiementDates;
 using RdC.Domain.PaiementDates.Events;
+using RdC.Domain.PlanDePaiements;
 using RdC.Domain.PlanDePaiements.Events;
 
 namespace RdC.Application.PlanDePaiements.DomainEventHandlers
@@ -39,13 +40,20 @@ namespace RdC.Application.PlanDePaiements.DomainEventHandlers
 
             var paiementDates = new List<DateOnly>();
 
-            for (int i = 0; i < nombreDeEcheances; i++)
+
+
+            for (int i = 0; i < nombreDeEcheances - 1; i++)
             {
                 listPaiementDates.Add(PaiementDate.Create(
                     notification.PlanID,
                     DateTime.Now.AddMonths(i + 1),
                     plan.MontantDeChaqueEcheance));
             }
+
+            listPaiementDates.Add(PaiementDate.Create(
+                notification.PlanID,
+                DateTime.Now.AddMonths(nombreDeEcheances),
+                _GetLastEcheanceAmount(plan)));
 
             await _paiementDateRepository.AddAsync(listPaiementDates);
 
@@ -54,6 +62,21 @@ namespace RdC.Application.PlanDePaiements.DomainEventHandlers
             listPaiementDates[0].RaiseDomainEvent(new CreatePaiementDatesDomainEvent(notification.PlanID));
 
             await _domainEventDispatcher.DispatchEventsAsync(listPaiementDates[0]);
+        }
+
+        private bool _DoWeHaveADifferenteLastEcheanceAmount(PlanDePaiement plan)
+        {
+            return plan.MontantTotal % plan.MontantDeChaqueEcheance != 0;
+        }
+
+        private decimal _GetLastEcheanceAmount(PlanDePaiement plan)
+        {
+            decimal lastEcheanceAmount = plan.MontantTotal % plan.MontantDeChaqueEcheance;
+
+            if (lastEcheanceAmount == 0)
+                return plan.MontantDeChaqueEcheance;
+
+            return lastEcheanceAmount;
         }
     }
 }
