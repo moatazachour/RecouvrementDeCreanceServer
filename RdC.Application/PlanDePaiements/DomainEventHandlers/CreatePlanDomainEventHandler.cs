@@ -64,11 +64,6 @@ namespace RdC.Application.PlanDePaiements.DomainEventHandlers
             await _domainEventDispatcher.DispatchEventsAsync(listPaiementDates[0]);
         }
 
-        private bool _DoWeHaveADifferenteLastEcheanceAmount(PlanDePaiement plan)
-        {
-            return plan.MontantTotal % plan.MontantDeChaqueEcheance != 0;
-        }
-
         private decimal _GetLastEcheanceAmount(PlanDePaiement plan)
         {
             decimal lastEcheanceAmount = plan.MontantTotal % plan.MontantDeChaqueEcheance;
