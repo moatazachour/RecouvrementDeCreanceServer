@@ -65,7 +65,7 @@ namespace RdC.Application.PaiementDates.DomainEventHandlers
 
             foreach (var paiement in paiementDates)
             {
-                sb.AppendLine($"- {paiement.EcheanceDate.ToString("dd/MM/yyyy")}");
+                sb.AppendLine(@$"- {paiement.EcheanceDate.ToString("dd/MM/yyyy")} : {paiement.MontantDeEcheance} TND");
             }
 
             sb.AppendLine();

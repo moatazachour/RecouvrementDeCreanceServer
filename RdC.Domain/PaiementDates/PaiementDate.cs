@@ -47,18 +47,36 @@ namespace RdC.Domain.PaiementDates
 
         public static PaiementDate Create(
             int PlanID,
-            DateTime EcheanceDate,
+            DateOnly EcheanceDate,
             decimal MontantDeEcheance)
         {
             PaiementDate paiementDate = new PaiementDate(
                 id: 0,
                 PlanID,
-                DateOnly.FromDateTime(EcheanceDate),
+                EcheanceDate,
                 MontantDeEcheance,
                 montantPayee: 0,
                 montantDue: MontantDeEcheance,
                 isPaid: false,
                 isLocked: false);
+
+            return paiementDate;
+        }
+
+        public static PaiementDate CreatePaidDate(
+            int PlanID,
+            DateOnly EcheanceDate,
+            decimal MontantDeEcheance)
+        {
+            PaiementDate paiementDate = new PaiementDate(
+                id: 0,
+                PlanID,
+                EcheanceDate,
+                MontantDeEcheance,
+                montantPayee: MontantDeEcheance,
+                montantDue: 0,
+                isPaid: true,
+                isLocked: true);
 
             return paiementDate;
         }

@@ -2,5 +2,7 @@
 
 namespace RdC.Domain.PlanDePaiements.Events
 {
-    public sealed record CreatePlanDomainEvent(int PlanID) : IDomainEvent;
+    public sealed record CreatePlanDomainEvent(
+        int PlanID,
+        decimal MontantDeChaqueEcheance) : IDomainEvent;
 }

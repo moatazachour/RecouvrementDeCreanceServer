@@ -22,10 +22,6 @@ namespace RdC.Infrastructure.PlanDePaiements.Persistance
                 .HasColumnType("TINYINT")
                 .IsRequired();
 
-            builder.Property(p => p.MontantDeChaqueEcheance)
-                .HasColumnType("decimal(18, 3)")
-                .IsRequired();
-
             builder.Property(p => p.MontantRestant)
                 .HasColumnType("decimal(18, 3)")
                 .IsRequired();
@@ -37,6 +33,10 @@ namespace RdC.Infrastructure.PlanDePaiements.Persistance
             builder.Property(p => p.PlanStatus)
                 .HasConversion<int>()
                 .HasColumnType("TINYINT")
+                .IsRequired();
+
+            builder.Property(p => p.IsLocked)
+                .HasColumnType("BIT")
                 .IsRequired();
 
             builder.HasMany(plan => plan.Factures)

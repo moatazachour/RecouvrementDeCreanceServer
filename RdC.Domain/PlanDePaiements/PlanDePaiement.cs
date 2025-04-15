@@ -13,18 +13,18 @@ namespace RdC.Domain.PlanDePaiements
             int id,
             decimal montantTotal, 
             byte nombreDeEcheances, 
-            decimal montantDeChaqueEcheance, 
             decimal montantRestant,
             DateTime creationDate,
-            PlanStatus planStatus)
+            PlanStatus planStatus,
+            bool isLocked)
             : base(id)
         {
             MontantTotal = montantTotal;
             NombreDeEcheances = nombreDeEcheances;
-            MontantDeChaqueEcheance = montantDeChaqueEcheance;
             MontantRestant = montantRestant;
             CreationDate = creationDate;
             PlanStatus = planStatus;
+            IsLocked = isLocked;
         }
         
         [JsonIgnore]
@@ -35,25 +35,24 @@ namespace RdC.Domain.PlanDePaiements
 
         public decimal MontantTotal { get; private set; }
         public byte NombreDeEcheances { get; set; }
-        public decimal MontantDeChaqueEcheance {  get; private set; }
         public decimal MontantRestant { get; set; }
         public DateTime CreationDate { get; private set; }
         public PlanStatus PlanStatus { get; set; }
+        public bool IsLocked { get; set; }
 
         public static PlanDePaiement Create(
             decimal montantTotal,
             byte nombreDeEcheances,
-            decimal montantDeChaqueEcheance,
             DateTime creationDate)
         {
             var plan = new PlanDePaiement(
                 id: 0,
                 montantTotal,
                 nombreDeEcheances,
-                montantDeChaqueEcheance,
                 montantRestant: montantTotal,
                 creationDate,
-                PlanStatus.EnCours);
+                PlanStatus.EnCours,
+                isLocked: false);
 
             return plan;
         }
@@ -61,6 +60,7 @@ namespace RdC.Domain.PlanDePaiements
         public PlanDePaiement Desactivate(int missedPaiementsCount)
         {
             PlanStatus = PlanStatus.Annule;
+            IsLocked = true;
 
             RaiseDomainEvent(new DesactivatePlanDomainEvent(Id, missedPaiementsCount));
 

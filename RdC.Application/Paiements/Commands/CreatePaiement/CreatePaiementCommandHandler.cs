@@ -41,6 +41,7 @@ namespace RdC.Application.Paiements.Commands.CreatePaiement
             if (planDePaiement.MontantRestant == 0)
             {
                 planDePaiement.PlanStatus = Domain.PlanDePaiements.PlanStatus.Termine;
+                planDePaiement.IsLocked = true;
 
                 foreach (var facture in planDePaiement.Factures)
                 {
@@ -48,11 +49,14 @@ namespace RdC.Application.Paiements.Commands.CreatePaiement
                 }
             }
 
-            paiementDate.MontantPayee += montantPayee;
+            if (!paiementDate.IsPaid)
+            {
+                paiementDate.MontantPayee += montantPayee;
 
-            paiementDate.MontantDue -= montantPayee;
+                paiementDate.MontantDue -= montantPayee;
+            }
 
-            if (paiementDate.MontantDue == 0)
+            if (paiementDate.MontantDue == 0 && !paiementDate.IsPaid)
             {
                 paiementDate.IsLocked = true;
                 paiementDate.IsPaid = true;
