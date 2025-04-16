@@ -1,8 +1,12 @@
 using MediatR;
+using RdC.Application.PaiementDates.Commands.CheckPreviousPaiement;
+using RdC.Application.PaiementDates.Queries.GetPaiementDatesByOffset;
+using RdC.Application.PaiementDates.Queries.GetPreviousPaiementDate;
 using RdC.Application.PaiementDates.Queries.GetTodaysPaiementDates;
 using RdC.Application.PlanDePaiements.Commands.CheckPlanStatus;
 using RdC.Application.Relances.Commands.SendRelance;
 using RdC.Domain.PaiementDates;
+using RdC.Domain.Relances;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 
@@ -35,37 +39,92 @@ namespace RdC.WorkerService
         {
             while (!stoppingToken.IsCancellationRequested)
             {
-                var listOfTodaysUnpaidPaiementDates = await _GetTodaysPaiementDates();
+                await UpcomingUnpaidPaymentReminderBefore(3);
+                await UpcomingUnpaidPaymentReminderBefore(1);
 
-                if (listOfTodaysUnpaidPaiementDates.Count == 0)
-                {
-                    _logger.LogInformation("No unpaid payments found for today.");
-                    break;
-                }
+                await TodaysDateChecker();
 
-                if (listOfTodaysUnpaidPaiementDates.Count > 0)
-                {
-                    foreach (var paiementDate in listOfTodaysUnpaidPaiementDates)
-                    {
-                        if (await _CheckIfPlanStillActive(paiementDate))
-                        {
-                            await _SendPaiementRemainder(paiementDate.Id);
-                        }
-                    } 
-                }
+                await OverdueUnpaidPaymentReminder(1);
+                await OverdueUnpaidPaymentReminder(3);
+                await OverdueUnpaidPaymentReminder(7);
 
                 _logger.LogInformation("Payment reminder task completed, waiting for the next execution.");
                 await Task.Delay(TimeSpan.FromDays(1), stoppingToken);
             }
         }
 
-        private async Task<List<PaiementDate>> _GetTodaysPaiementDates()
+        private async Task UpcomingUnpaidPaymentReminderBefore(int days)
+        {
+            var futuresUnpaidPaiementDates = await _GetPaiementDatesByOffset(DaysOffset: days);
+
+            if (futuresUnpaidPaiementDates.Count == 0)
+                return;
+
+            foreach (var unpaidPaiementDate in futuresUnpaidPaiementDates)
+            {
+                var previousPaiementDate = await _GetPreviousPaiementDate(unpaidPaiementDate.Id);
+
+                if (previousPaiementDate != null && !previousPaiementDate.IsPaid)
+                {
+                    await _SendPaiementRemainder(
+                        unpaidPaiementDate.Id,
+                        RelanceContext.UpcomingPaymentReminderWithUnpaidPreviousPayment);
+
+                    continue;
+                }
+
+                await _SendPaiementRemainder(unpaidPaiementDate.Id, RelanceContext.UpcomingPaymentReminder);
+            }
+        }
+
+        private async Task TodaysDateChecker()
+        {
+            var todaysUnpaidPaiementDates = await _GetPaiementDatesByOffset(DaysOffset: 0);
+
+            if (todaysUnpaidPaiementDates.Count == 0)
+                return;
+
+            foreach (var unpaidPaiementDate in todaysUnpaidPaiementDates)
+            {
+                if (!await _CheckIfPlanStillActive(unpaidPaiementDate))
+                {
+                    return;
+                }
+
+                await _CheckPreviousPaiement(unpaidPaiementDate.Id);
+            }
+        }
+
+        private async Task OverdueUnpaidPaymentReminder(int days)
+        {
+            var futuresUnpaidPaiementDates = await _GetPaiementDatesByOffset((-1) * days);
+
+            if (futuresUnpaidPaiementDates.Count == 0)
+                return;
+
+            foreach (var unpaidPaiementDate in futuresUnpaidPaiementDates)
+            {
+                await _SendPaiementRemainder(unpaidPaiementDate.Id, RelanceContext.OverduePaymentReminder);
+            }
+        }
+
+
+
+        private async Task<List<PaiementDate>> _GetPaiementDatesByOffset(int DaysOffset)
         {
             using var scope = _serviceProvider.CreateScope();
             var mediator = scope.ServiceProvider.GetRequiredService<ISender>();
 
-            var listOfTodaysPaiementDates = await mediator.Send(new GetTodaysPaiementDatesQuery());
-            return listOfTodaysPaiementDates;
+            var listPaiementDatesByOffset = await mediator.Send(new GetPaiementDatesByOffsetQuery(DaysOffset));
+            return listPaiementDatesByOffset;
+        }
+
+        private async Task<PaiementDate?> _GetPreviousPaiementDate(int paiementDateID)
+        {
+            using var scope = _serviceProvider.CreateScope();
+            var mediator = scope.ServiceProvider.GetRequiredService<ISender>();
+
+            return await mediator.Send(new GetPreviousPaiementDateQuery(paiementDateID));
         }
 
         private async Task<bool> _CheckIfPlanStillActive(PaiementDate paiementDate)
@@ -80,16 +139,27 @@ namespace RdC.WorkerService
             return await mediator.Send(command);
         }
 
-        private async Task _SendPaiementRemainder(int PaiementDateID)
+        private async Task _SendPaiementRemainder(int PaiementDateID, RelanceContext relanceContext)
         {
             using var scope = _serviceProvider.CreateScope();
             var mediator = scope.ServiceProvider.GetRequiredService<ISender>();
 
-            var command = new SendRelanceCommand(PaiementDateID);
+            var command = new SendRelanceCommand(PaiementDateID, relanceContext);
 
             var isSent = await mediator.Send(command);
 
             _logger.LogInformation(isSent.ToString());
         }
+
+        private async Task _CheckPreviousPaiement(int PaiementDateID)
+        {
+            using var scope = _serviceProvider.CreateScope();
+            var mediator = scope.ServiceProvider.GetRequiredService<ISender>();
+
+            var command = new CheckPreviousPaiementCommand(PaiementDateID);
+            
+            await mediator.Send(command);
+        }
+
     }
 }

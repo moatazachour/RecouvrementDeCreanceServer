@@ -17,5 +17,7 @@ namespace RdC.Application.Common.Interfaces
         Task<PaiementDate?> GetPreviousPaiementDateAsync(int currentPaiementDateID);
 
         Task<bool> UpdateAsync(PaiementDate paiementDate);
+
+        Task<List<PaiementDate>> GetPaiementDatesByOffsetAsync(int DaysOffset);
     }
 }

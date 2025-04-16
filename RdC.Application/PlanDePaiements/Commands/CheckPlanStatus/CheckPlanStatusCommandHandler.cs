@@ -40,7 +40,7 @@ namespace RdC.Application.PlanDePaiements.Commands.CheckPlanStatus
                 throw new KeyNotFoundException($"Plan de paiement with ID {request.planID} was not found.");
             }
 
-            if (_CheckIfPlan(allPreviousPaiementDates, request.maxUpaidPaiements)) // Change method name
+            if (_CheckIfPlanHaveMaxUnpaidPaiements(allPreviousPaiementDates, request.maxUpaidPaiements))
             {
                 plan.Desactivate(request.maxUpaidPaiements);
 
@@ -56,7 +56,7 @@ namespace RdC.Application.PlanDePaiements.Commands.CheckPlanStatus
             return true;
         }
 
-        private bool _CheckIfPlan(List<PaiementDate> allPreviousPaiementDates, int maxUnpaidPaiements) // Change method name
+        private bool _CheckIfPlanHaveMaxUnpaidPaiements(List<PaiementDate> allPreviousPaiementDates, int maxUnpaidPaiements) // Change method name
         {
             int unpaidPaiementDateConsecutiveCounter = 0;
 

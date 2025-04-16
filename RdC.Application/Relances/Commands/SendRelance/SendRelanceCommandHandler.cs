@@ -2,7 +2,6 @@
 using RdC.Application.Common.Dispatcher;
 using RdC.Application.Common.Interfaces;
 using RdC.Domain.PaiementDates;
-using RdC.Domain.PlanDePaiements;
 using RdC.Domain.Relances;
 using RdC.Domain.Relances.Events;
 using System.Text;
@@ -20,7 +19,7 @@ namespace RdC.Application.Relances.Commands.SendRelance
         private readonly IDomainEventDispatcher _domainEventDispatcher;
 
         public SendRelanceCommandHandler(
-            IEmailRelanceRepository emailRelanceRepository, 
+            IEmailRelanceRepository emailRelanceRepository,
             IPaiementDateRepository paiementDateRepository,
             IAcheteurRepository acheteurRepository,
             IUnitOfWork unitOfWork,
@@ -38,7 +37,6 @@ namespace RdC.Application.Relances.Commands.SendRelance
         public async Task<bool> Handle(SendRelanceCommand request, CancellationToken cancellationToken)
         {
             var currentPaiementDate = await _paiementDateRepository.GetByIdAsync(request.PaiementDateID);
-            var previousPaiementDate = await _paiementDateRepository.GetPreviousPaiementDateAsync(request.PaiementDateID);
 
             if (currentPaiementDate is null)
             {
@@ -47,8 +45,10 @@ namespace RdC.Application.Relances.Commands.SendRelance
 
             var plan = await _planDePaiementRepository.GetByIdAsync(currentPaiementDate.PlanID);
 
-            if (plan is null) 
+            if (plan is null)
+            {
                 return false;
+            }
 
             var acheteur = await _acheteurRepository.GetByIdAsync(plan.Factures[0].AcheteurID);
 
@@ -57,17 +57,26 @@ namespace RdC.Application.Relances.Commands.SendRelance
                 return false;
             }
 
-            if (previousPaiementDate != null && !previousPaiementDate.IsPaid)
+            string subject = string.Empty;
+            string emailBody = string.Empty;
+
+            if (request.RelanceContext == RelanceContext.UpcomingPaymentReminder)
             {
-                previousPaiementDate.IsLocked = true;
-
-                currentPaiementDate.MontantDue += previousPaiementDate.MontantDue;
-
-                await _paiementDateRepository.UpdateAsync(previousPaiementDate);
-                await _paiementDateRepository.UpdateAsync(currentPaiementDate);
+                subject = "Rappel de Paiement à Venir";
+                emailBody = _BuildUpcomingPaymentReminder(currentPaiementDate);
             }
 
-            string emailBody = _BuildEmailBody(currentPaiementDate);
+            if (request.RelanceContext == RelanceContext.OverduePaymentReminder)
+            {
+                subject = "Rappel de Paiement en Retard";
+                emailBody = _BuildOverduePaymentReminder(currentPaiementDate);
+            }
+
+            if (request.RelanceContext == RelanceContext.UpcomingPaymentReminderWithUnpaidPreviousPayment)
+            {
+                subject = "Rappel de Paiement à Venir";
+                emailBody = await _BuildUpcomingPaymentReminderWithUnpaidPreviousPaiement(currentPaiementDate);
+            }
 
             var emailRelance = EmailRelance.Send(
                 currentPaiementDate.Id,
@@ -79,26 +88,76 @@ namespace RdC.Application.Relances.Commands.SendRelance
 
             await _unitOfWork.CommitChangesAsync();
 
-            currentPaiementDate.RaiseDomainEvent(new SendEmailDomainEvent(acheteur.Email, emailBody));
+            currentPaiementDate.RaiseDomainEvent(new SendEmailDomainEvent(acheteur.Email, subject, emailBody));
 
             await _domainEventDispatcher.DispatchEventsAsync(currentPaiementDate);
 
             return true;
         }
 
-        private string _BuildEmailBody(PaiementDate paiementDate)
+        private string _BuildUpcomingPaymentReminder(PaiementDate paiementDate)
         {
             var sb = new StringBuilder();
-            sb.AppendLine($"Bonjour,");
+            sb.AppendLine("Bonjour,");
             sb.AppendLine();
-            sb.AppendLine($"Nous vous rappelons que l’échéance de paiement prévue le {paiementDate.EcheanceDate:dd/MM/yyyy} est arrivée à terme.");
-            sb.AppendLine($"Montant dû : {paiementDate.MontantDue} DNT.");
+            sb.AppendLine($"Nous vous rappelons que l’échéance de paiement de {paiementDate.MontantDue} DNT approche.");
+            sb.AppendLine($"Date d’échéance : {paiementDate.EcheanceDate:dd/MM/yyyy}.");
             sb.AppendLine();
-            sb.AppendLine("Merci de procéder au paiement dans les plus brefs délais.");
+            sb.AppendLine("Merci de prévoir le règlement dans les délais.");
             sb.AppendLine();
             sb.AppendLine("Cordialement,");
             sb.AppendLine("Votre équipe de gestion");
             return sb.ToString();
         }
+
+        private async Task<string> _BuildUpcomingPaymentReminderWithUnpaidPreviousPaiement(
+            PaiementDate paiementDate)
+        {
+            var previousPaiementDate = await _paiementDateRepository.GetPreviousPaiementDateAsync(paiementDate.Id);
+
+            var sb = new StringBuilder();
+            sb.AppendLine("Bonjour,");
+            sb.AppendLine();
+
+            sb.AppendLine($"Nous vous rappelons que l’échéance de paiement de {paiementDate.MontantDue} DNT approche.");
+            sb.AppendLine($"Date d’échéance : {paiementDate.EcheanceDate:dd/MM/yyyy}.");
+
+            if (previousPaiementDate != null)
+            {
+                decimal montantTotal = previousPaiementDate.MontantDue + paiementDate.MontantDue;
+
+                sb.AppendLine();
+                sb.AppendLine($"⚠️ Nous constatons également qu’un paiement antérieur de {previousPaiementDate.MontantDue} DNT, prévu le {previousPaiementDate.EcheanceDate:dd/MM/yyyy}, n’a pas encore été réglé.");
+                sb.AppendLine("Nous vous invitons à régulariser cette situation dans les plus brefs délais.");
+
+                sb.AppendLine();
+                sb.AppendLine($"💡 À noter : si le paiement de cette échéance précédente n’est pas effectué avant demain,");
+                sb.AppendLine($"le montant total à régler demain sera de {montantTotal} DNT.");
+            }
+
+            sb.AppendLine();
+            sb.AppendLine("Merci de votre compréhension.");
+            sb.AppendLine();
+            sb.AppendLine("Cordialement,");
+            sb.AppendLine("Votre équipe de gestion");
+
+            return sb.ToString();
+        }
+
+        private string _BuildOverduePaymentReminder(PaiementDate paiementDate)
+        {
+            var sb = new StringBuilder();
+            sb.AppendLine("Bonjour,");
+            sb.AppendLine();
+            sb.AppendLine($"Nous vous informons que l’échéance de paiement prévue le {paiementDate.EcheanceDate:dd/MM/yyyy} est dépassée.");
+            sb.AppendLine($"Montant en attente : {paiementDate.MontantDue} DNT.");
+            sb.AppendLine();
+            sb.AppendLine("Merci de procéder au paiement dans les plus brefs délais afin d’éviter toute pénalité.");
+            sb.AppendLine();
+            sb.AppendLine("Cordialement,");
+            sb.AppendLine("Votre équipe de gestion");
+            return sb.ToString();
+        }
+
     }
 }
