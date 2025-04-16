@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using RdC.Application.PaiementDates.Commands.CreatePaiementDates;
 using RdC.Application.PaiementDates.Queries.GetPaiementDate;
 using RdC.Domain.DTO.Paiement;
 using RdC.Domain.DTO.PaiementDate;
@@ -15,6 +16,25 @@ namespace RdC.Api.Controllers
         public PaiementDatesController(ISender mediator)
         {
             _mediator = mediator;
+        }
+
+        [HttpPost]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> CreatePaiementDates([FromBody] CreatePaiementDatesRequest request)
+        {
+            var command = new CreatePaiementDatesCommand(request);
+
+            try
+            {
+                await _mediator.Send(command);
+
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
         }
 
         [HttpGet("{id:int}")]

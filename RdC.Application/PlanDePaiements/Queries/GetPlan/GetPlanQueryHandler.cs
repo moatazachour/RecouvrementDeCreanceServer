@@ -27,10 +27,10 @@ namespace RdC.Application.PlanDePaiements.Queries.GetPlan
                 planDePaiement.Id,
                 planDePaiement.MontantTotal,
                 planDePaiement.NombreDeEcheances,
-                planDePaiement.MontantDeChaqueEcheance,
                 planDePaiement.MontantRestant,
                 planDePaiement.CreationDate,
                 planDePaiement.PlanStatus,
+                planDePaiement.IsLocked,
                 planDePaiement.Factures.Select(facture => new FactureResponse(
                                                             facture.Id,
                                                             facture.NumFacture,

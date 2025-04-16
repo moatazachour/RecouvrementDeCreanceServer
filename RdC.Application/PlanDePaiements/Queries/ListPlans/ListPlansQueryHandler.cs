@@ -24,10 +24,10 @@ namespace RdC.Application.PlanDePaiements.Queries.ListPlans
                                             p.Id,
                                             p.MontantTotal,
                                             p.NombreDeEcheances,
-                                            p.MontantDeChaqueEcheance,
                                             p.MontantRestant,
                                             p.CreationDate,
                                             p.PlanStatus,
+                                            p.IsLocked,
                                             p.Factures.Select(facture => new FactureResponse(
                                                                                 facture.Id,
                                                                                 facture.NumFacture,

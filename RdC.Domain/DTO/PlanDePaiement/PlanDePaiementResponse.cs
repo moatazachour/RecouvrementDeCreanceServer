@@ -9,10 +9,10 @@ namespace RdC.Domain.DTO.PlanDePaiement
         int PlanID,
         decimal MontantTotal,
         byte nombreDeEcheances,
-        decimal montantDeChaqueEcheance,
         decimal montantRestant,
         DateTime creationDate,
         PlanStatus planStatus,
+        bool isLocked,
         List<FactureResponse> Factures,
         List<PaiementDateResponse> PaiementDates);
 }

@@ -34,7 +34,6 @@ namespace RdC.Application.PlanDePaiements.Commands.CreatePlan
             var plan = PlanDePaiement.Create(
                 request.createPlanDePaiementRequest.MontantTotal,
                 request.createPlanDePaiementRequest.NombreDeEcheances,
-                request.createPlanDePaiementRequest.MontantDeChaqueEcheance,
                 DateTime.Now);
 
             plan.AddFactures(factures);
@@ -42,10 +41,6 @@ namespace RdC.Application.PlanDePaiements.Commands.CreatePlan
             await _planDePaiementRepository.AddAsync(plan);
 
             await _unitOfWork.CommitChangesAsync();
-
-            plan.RaiseDomainEvent(new CreatePlanDomainEvent(plan.Id));
-
-            await _domainEventDispatcher.DispatchEventsAsync(plan);
 
             return plan.Id;
         }

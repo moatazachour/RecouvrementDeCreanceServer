@@ -1,8 +1,9 @@
-﻿namespace RdC.Domain.DTO.PlanDePaiement
+﻿using RdC.Domain.DTO.PaiementDate;
+
+namespace RdC.Domain.DTO.PlanDePaiement
 {
     public record CreatePlanDePaiementRequest(
         decimal MontantTotal, 
         byte NombreDeEcheances, 
-        decimal MontantDeChaqueEcheance,
         List<int> FactureIDs);
 }
