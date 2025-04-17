@@ -18,7 +18,7 @@ namespace RdC.Application.Relances.DomainEventHandlers
         {
             await _emailService.SendEmailAsync(
                 notification.email,
-                "Rappel de Paiement",
+                notification.subject,
                 notification.emailBody);
         }
     }

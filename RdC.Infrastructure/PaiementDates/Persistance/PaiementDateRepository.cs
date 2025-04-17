@@ -140,5 +140,13 @@ namespace RdC.Infrastructure.PaiementDates.Persistance
             return true;
         }
 
+        public async Task<List<PaiementDate>> GetPaiementDatesByOffsetAsync(int DaysOffset)
+        {
+            DateOnly targetDate = DateOnly.FromDateTime(DateTime.Today.AddDays(DaysOffset));
+
+            return await _dbContext.PaiementDates
+                            .Where(pd => !pd.IsPaid && !pd.IsLocked && pd.EcheanceDate == targetDate)
+                            .ToListAsync();
+        }
     }
 }

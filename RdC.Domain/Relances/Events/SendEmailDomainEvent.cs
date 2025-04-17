@@ -2,5 +2,5 @@
 
 namespace RdC.Domain.Relances.Events
 {
-    public sealed record SendEmailDomainEvent(string email, string emailBody) : IDomainEvent;
+    public sealed record SendEmailDomainEvent(string email, string subject, string emailBody) : IDomainEvent;
 }
