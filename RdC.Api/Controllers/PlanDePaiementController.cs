@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using RdC.Application.PlanDePaiements.Commands.CreatePlan;
+using RdC.Application.PlanDePaiements.Commands.LockPlan;
 using RdC.Application.PlanDePaiements.Queries.GetPlan;
 using RdC.Application.PlanDePaiements.Queries.ListPlans;
 using RdC.Domain.DTO.PlanDePaiement;
@@ -73,6 +74,29 @@ namespace RdC.Api.Controllers
             {
                 var planId = await _mediator.Send(command);
                 return CreatedAtAction(nameof(GetPlanById), new { id = planId }, planId);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
+        [HttpPut("Lock/{id:int}")]
+        [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> LockPlan([FromRoute] int id)
+        {
+            var command = new LockPlanCommand(id);
+
+            try
+            {
+                var isLocked = await _mediator.Send(command);
+
+                if (!isLocked)
+                    return NotFound($"Plan with ID {id} not found.");
+
+                return Ok(isLocked);
             }
             catch (Exception ex)
             {
