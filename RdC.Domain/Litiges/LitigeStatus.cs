@@ -1,12 +1,14 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace RdC.Domain.PlanDePaiements
+namespace RdC.Domain.Litiges
 {
     [JsonConverter(typeof(JsonStringEnumConverter))]
-    public enum PlanStatus
+    public enum LitigeStatus
     {
+        EN_ATTENTE,
         EN_COURS,
-        TERMINE,
-        ANNULE
+        RESOLU,
+        REJETE,
+        CLOS
     }
 }

@@ -5,10 +5,10 @@ namespace RdC.Domain.Factures
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public enum FactureStatus
     {
-        Impayee,
-        PartiellementPayee,
-        Payee,
-        EnLitige,
-        EnCoursDePaiement
+        IMPAYEE,
+        PARTIELLEMENT_PAYEE,
+        PAYEE,
+        EN_LITIGE,
+        EN_COURS_DE_PAIEMENT
     }
 }

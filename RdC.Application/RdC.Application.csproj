@@ -21,4 +21,9 @@
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.2" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Litiges\Commands\" />
+    <Folder Include="Litiges\Queries\" />
+  </ItemGroup>
+
 </Project>

@@ -2,6 +2,7 @@
 using RdC.Application.Common.Interfaces;
 using RdC.Domain.Acheteurs;
 using RdC.Domain.Factures;
+using RdC.Domain.Litiges;
 using RdC.Domain.PaiementDates;
 using RdC.Domain.Paiements;
 using RdC.Domain.PlanDePaiements;
@@ -20,6 +21,8 @@ namespace RdC.Infrastructure.Common.Persistance
         public DbSet<Relance> Relances { get; set; }
         public DbSet<EmailRelance> EmailRelances { get; set; }
         public DbSet<SMSRelance> SMSRelances { get; set; }
+        public DbSet<Litige> Litiges { get; set; }
+        public DbSet<LitigeType> LitigeTypes { get; set; }
 
         public RecouvrementDBContext(DbContextOptions options) : base(options)
         {
