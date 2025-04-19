@@ -6,7 +6,7 @@ using RdC.Application.LitigeTypes.Queries.GetAllLitigeTypes;
 using RdC.Application.LitigeTypes.Queries.GetLitigeType;
 using RdC.Domain.DTO.LitigeType;
 
-namespace RdC.Api.Controllers
+namespace RdC.Api.Controllers.LitigeTypes
 {
     [Route("api/[controller]")]
     [ApiController]

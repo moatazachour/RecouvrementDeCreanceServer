@@ -7,7 +7,7 @@ using RdC.Domain.Acheteurs;
 using RdC.Domain.DTO.Acheteur;
 using RdC.Domain.DTO.Facture;
 
-namespace RdC.Api.Controllers
+namespace RdC.Api.Controllers.Acheteurs
 {
     [Route("api/[controller]")]
     [ApiController]

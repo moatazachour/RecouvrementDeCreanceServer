@@ -6,7 +6,7 @@ using RdC.Application.PlanDePaiements.Queries.GetPlan;
 using RdC.Application.PlanDePaiements.Queries.ListPlans;
 using RdC.Domain.DTO.PlanDePaiement;
 
-namespace RdC.Api.Controllers
+namespace RdC.Api.Controllers.PlanDePaiements
 {
     [Route("api/[controller]")]
     [ApiController]

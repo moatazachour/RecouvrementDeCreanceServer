@@ -42,6 +42,9 @@ namespace RdC.Infrastructure.Litiges.Persistance
             builder.Property(l => l.CreationDate)
                 .HasColumnType("DATETIME")
                 .IsRequired();
+
+            builder.Property(l => l.ResolutionDate)
+                .HasColumnType("DATETIME");
         }
     }
 }

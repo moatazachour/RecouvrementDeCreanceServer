@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RdC.Infrastructure.Common.Persistance;
 
@@ -11,9 +12,11 @@ using RdC.Infrastructure.Common.Persistance;
 namespace RdC.Infrastructure.Migrations
 {
     [DbContext(typeof(RecouvrementDBContext))]
-    partial class RecouvrementDBContextModelSnapshot : ModelSnapshot
+    [Migration("20250418192817_AddResolutionDateToLitigeTable")]
+    partial class AddResolutionDateToLitigeTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -144,40 +147,6 @@ namespace RdC.Infrastructure.Migrations
                     b.HasIndex("LitigeTypeID");
 
                     b.ToTable("Litiges");
-                });
-
-            modelBuilder.Entity("RdC.Domain.Litiges.LitigeJustificatif", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("JustificationID");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("CheminFichier")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)")
-                        .HasColumnName("CheminFichier");
-
-                    b.Property<DateTime>("DateAjout")
-                        .HasColumnType("DATETIME")
-                        .HasColumnName("DateAjout");
-
-                    b.Property<int>("LitigeID")
-                        .HasColumnType("int")
-                        .HasColumnName("LitigeID");
-
-                    b.Property<string>("NomFichier")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)")
-                        .HasColumnName("NomFicher");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("LitigeID");
-
-                    b.ToTable("Justificatifs");
                 });
 
             modelBuilder.Entity("RdC.Domain.Litiges.LitigeType", b =>
@@ -407,17 +376,6 @@ namespace RdC.Infrastructure.Migrations
                     b.Navigation("LitigeType");
                 });
 
-            modelBuilder.Entity("RdC.Domain.Litiges.LitigeJustificatif", b =>
-                {
-                    b.HasOne("RdC.Domain.Litiges.Litige", "Litige")
-                        .WithMany("Justificatifs")
-                        .HasForeignKey("LitigeID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Litige");
-                });
-
             modelBuilder.Entity("RdC.Domain.PaiementDates.PaiementDate", b =>
                 {
                     b.HasOne("RdC.Domain.PlanDePaiements.PlanDePaiement", "PlanDePaiement")
@@ -477,11 +435,6 @@ namespace RdC.Infrastructure.Migrations
             modelBuilder.Entity("RdC.Domain.Factures.Facture", b =>
                 {
                     b.Navigation("Litiges");
-                });
-
-            modelBuilder.Entity("RdC.Domain.Litiges.Litige", b =>
-                {
-                    b.Navigation("Justificatifs");
                 });
 
             modelBuilder.Entity("RdC.Domain.Litiges.LitigeType", b =>

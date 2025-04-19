@@ -23,6 +23,7 @@ namespace RdC.Infrastructure.Common.Persistance
         public DbSet<SMSRelance> SMSRelances { get; set; }
         public DbSet<Litige> Litiges { get; set; }
         public DbSet<LitigeType> LitigeTypes { get; set; }
+        public DbSet<LitigeJustificatif> Justificatifs { get; set; }
 
         public RecouvrementDBContext(DbContextOptions options) : base(options)
         {

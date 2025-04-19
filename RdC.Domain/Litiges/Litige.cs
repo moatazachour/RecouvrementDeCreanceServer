@@ -1,5 +1,6 @@
 ﻿using RdC.Domain.Abstrations;
 using RdC.Domain.Factures;
+using System.Text.Json.Serialization;
 
 namespace RdC.Domain.Litiges
 {
@@ -31,6 +32,11 @@ namespace RdC.Domain.Litiges
         public string LitigeDescription { get; private set; }
         public DateTime CreationDate { get; private set; }
 
+        public DateTime? ResolutionDate { get; private set; }
+
+        [JsonIgnore]
+        public List<LitigeJustificatif> Justificatifs { get; private set; } = new();
+
         public static Litige Declare(
             int factureID,
             int litigeTypeID,
@@ -45,6 +51,16 @@ namespace RdC.Domain.Litiges
                 creationDate: DateTime.Now);
 
             return litige;
+        }
+
+        public void AddJustificatif(string fileName, string filePath)
+        {
+            var justificatif = LitigeJustificatif.Upload(
+                                    LitigeID: Id,
+                                    NomFichier: fileName,
+                                    CheminFichier: filePath);
+
+            Justificatifs.Add(justificatif);
         }
     }
 }
