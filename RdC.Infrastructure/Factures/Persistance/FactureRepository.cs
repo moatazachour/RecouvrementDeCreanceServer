@@ -55,11 +55,11 @@ namespace RdC.Infrastructure.Factures.Persistance
                         newFactures.ForEach(facture =>
                         {
                             if (facture.MontantRestantDue == decimal.Zero)
-                                facture.Status = FactureStatus.Payee;
+                                facture.Status = FactureStatus.PAYEE;
                             else if (facture.MontantRestantDue == facture.MontantTotal)
-                                facture.Status = FactureStatus.Impayee;
+                                facture.Status = FactureStatus.IMPAYEE;
                             else
-                                facture.Status = FactureStatus.PartiellementPayee;
+                                facture.Status = FactureStatus.PARTIELLEMENT_PAYEE;
                         });
 
                         if (newFactures.Any())

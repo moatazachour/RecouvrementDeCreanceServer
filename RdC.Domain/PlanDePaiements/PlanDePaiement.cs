@@ -50,7 +50,7 @@ namespace RdC.Domain.PlanDePaiements
                 nombreDeEcheances,
                 montantRestant: montantTotal,
                 creationDate,
-                PlanStatus.EnCours,
+                PlanStatus.EN_COURS,
                 isLocked: false);
 
             return plan;
@@ -58,7 +58,7 @@ namespace RdC.Domain.PlanDePaiements
 
         public PlanDePaiement Desactivate(int missedPaiementsCount)
         {
-            PlanStatus = PlanStatus.Annule;
+            PlanStatus = PlanStatus.ANNULE;
             IsLocked = true;
 
             RaiseDomainEvent(new DesactivatePlanDomainEvent(Id, missedPaiementsCount));
