@@ -84,7 +84,9 @@ namespace RdC.Infrastructure.Factures.Persistance
 
         public async Task<List<Facture>> ListAsync()
         {
-            return await _dbContext.Factures.ToListAsync();
+            return await _dbContext.Factures
+                .Where(f => f.Status != FactureStatus.DUPLIQUE)
+                .ToListAsync();
         }
 
         public async Task<Facture?> UpdateAsync(int FactureID, FactureUpdate factureUpdate)

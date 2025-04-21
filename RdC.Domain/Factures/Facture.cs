@@ -39,5 +39,31 @@ namespace RdC.Domain.Factures
         public List<Litige> Litiges { get; private set; } = new();
 
         private Facture() { }
+
+        public void GetFactureStatus()
+        {
+            if (MontantRestantDue == 0)
+            {
+                Status = FactureStatus.PAYEE;
+            }
+
+            if (MontantRestantDue == MontantTotal)
+            {
+                Status = FactureStatus.IMPAYEE;
+            }
+
+            if (MontantRestantDue <  MontantTotal)
+            {
+                Status = FactureStatus.PARTIELLEMENT_PAYEE;
+            }
+        }
+
+        public void CorrectFactureAmounts(
+            decimal correctedMontantTotal,
+            decimal correctedMontantDue)
+        {
+            MontantTotal = correctedMontantTotal;
+            MontantRestantDue = correctedMontantDue;
+        }
     }
 }

@@ -62,5 +62,19 @@ namespace RdC.Domain.Litiges
 
             Justificatifs.Add(justificatif);
         }
+
+        public void Reject()
+        {
+            LitigeStatus = LitigeStatus.REJETE;
+
+            ResolutionDate = DateTime.Now;
+        }
+
+        public void Accept()
+        {
+            LitigeStatus = LitigeStatus.RESOLU;
+
+            ResolutionDate = DateTime.Now;
+        }
     }
 }

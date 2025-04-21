@@ -9,6 +9,7 @@ namespace RdC.Domain.Factures
         PARTIELLEMENT_PAYEE,
         PAYEE,
         EN_LITIGE,
-        EN_COURS_DE_PAIEMENT
+        EN_COURS_DE_PAIEMENT,
+        DUPLIQUE
     }
 }
