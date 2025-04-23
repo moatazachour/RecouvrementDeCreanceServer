@@ -11,5 +11,6 @@ namespace RdC.Domain.DTO.Litige
         LitigeStatus LitigeStatus,
         string LitigeDescription,
         DateTime CreationDate,
-        DateTime? ResolutionDate);
+        DateTime? ResolutionDate,
+        List<JustificatifResponse> LitigeJustificatifs);
 }

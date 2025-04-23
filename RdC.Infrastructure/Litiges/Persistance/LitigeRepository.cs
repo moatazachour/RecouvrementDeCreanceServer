@@ -26,6 +26,7 @@ namespace RdC.Infrastructure.Litiges.Persistance
             return _dbContext.Litiges
                 .Include(l => l.Facture)
                 .Include(l => l.LitigeType)
+                .Include(l => l.Justificatifs)
                 .ToListAsync();
         }
 

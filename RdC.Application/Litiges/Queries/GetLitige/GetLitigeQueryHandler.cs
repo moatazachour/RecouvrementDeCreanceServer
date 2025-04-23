@@ -41,7 +41,14 @@ namespace RdC.Application.Litiges.Queries.GetLitige
                                             litige.LitigeStatus,
                                             litige.LitigeDescription,
                                             litige.CreationDate,
-                                            litige.ResolutionDate);
+                                            litige.ResolutionDate,
+                                            litige.Justificatifs.Select(justificatif => 
+                                                            new JustificatifResponse(
+                                                                    justificatif.Id,
+                                                                    justificatif.LitigeID,
+                                                                    justificatif.NomFichier,
+                                                                    justificatif.CheminFichier,
+                                                                    justificatif.DateAjout)).ToList());
 
             return litigeResponse;
         }

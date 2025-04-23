@@ -5,6 +5,7 @@ using RdC.Application.Litiges.Commands.RejectLitige;
 using RdC.Application.Litiges.Commands.ResolveAmountError;
 using RdC.Application.Litiges.Commands.ResolveDuplicated;
 using RdC.Application.Litiges.Commands.UploadLitigeJustificatifs;
+using RdC.Application.Litiges.Queries.GetJustificatif;
 using RdC.Application.Litiges.Queries.GetLitige;
 using RdC.Application.Litiges.Queries.GetLitiges;
 using RdC.Domain.DTO.Litige;
@@ -142,6 +143,7 @@ namespace RdC.Api.Controllers.Litiges
             }
         }
 
+
         [HttpPut("CorrectAmount/{id:int}")]
         public async Task<IActionResult> ResolveAmountError(
             [FromRoute] int id,
@@ -168,6 +170,7 @@ namespace RdC.Api.Controllers.Litiges
             }
         }
 
+
         [HttpPut("ResolveDuplicated/{id:int}")]
         public async Task<IActionResult> ResolveDuplicated([FromRoute] int id)
         {
@@ -187,6 +190,42 @@ namespace RdC.Api.Controllers.Litiges
                 _logger.LogError(ex, "Failed to resolve duplication error.");
                 return StatusCode(500, "Something went wrong while resolving litige.");
             }
+        }
+
+
+        [HttpGet("{id:int}/Justificatifs/links")]
+        public async Task<IActionResult> GetJustificatifLinks([FromRoute] int id)
+        {
+            var litige = await _mediator.Send(new GetLitigeQuery(id));
+
+            if (litige is null || 
+                litige.LitigeJustificatifs is null || 
+                !litige.LitigeJustificatifs.Any())
+            {
+                return NotFound("No justificatifs found for this litige.");
+            }
+
+            var links = litige.LitigeJustificatifs.Select(j => new
+            {
+                j.NomFichier,
+                DownloadUrl = Url.Action(nameof(DownloadSingleJustificatif), new { id = j.JustificatifID })
+            });
+
+            return Ok(links);
+        }
+
+
+        [HttpGet("Justificatif/{id:int}/Download")]
+        public async Task<IActionResult> DownloadSingleJustificatif([FromRoute] int id)
+        {
+            var justificatif = await _mediator.Send(new GetJustificatifQuery(id));
+
+            if (justificatif is null || !System.IO.File.Exists(justificatif.CheminFichier))
+                return NotFound("Justificatif not found.");
+
+            var fileBytes = await System.IO.File.ReadAllBytesAsync(justificatif.CheminFichier);
+            
+            return File(fileBytes, "application/octet-stream", justificatif.CheminFichier);
         }
     }
 }

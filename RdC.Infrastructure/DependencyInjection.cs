@@ -37,6 +37,7 @@ namespace RdC.Infrastructure
             services.AddScoped<IEmailRelanceRepository, EmailRelanceRepository>();
             services.AddScoped<ILitigeRepository, LitigeRepository>();
             services.AddScoped<ILitigeTypeRepository, LitigeTypeRepository>();
+            services.AddScoped<ILitigeJustificatifRepository, LitigeJustificatifRepository>();
 
             services.AddTransient<IEmailService, EmailService>();
 
