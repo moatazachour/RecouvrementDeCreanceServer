@@ -5,7 +5,7 @@ using RdC.Application.PaiementDates.Queries.GetPaiementDate;
 using RdC.Domain.DTO.Paiement;
 using RdC.Domain.DTO.PaiementDate;
 
-namespace RdC.Api.Controllers
+namespace RdC.Api.Controllers.PaiementDates
 {
     [Route("api/[controller]")]
     [ApiController]

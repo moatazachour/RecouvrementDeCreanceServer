@@ -8,7 +8,7 @@ using RdC.Domain.DTO.Facture;
 using RdC.Domain.Factures;
 using System.Text.RegularExpressions;
 
-namespace RdC.Api.Controllers
+namespace RdC.Api.Controllers.Factures
 {
     [Route("api/[controller]")]
     [ApiController]

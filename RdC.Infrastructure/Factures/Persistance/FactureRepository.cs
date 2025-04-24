@@ -55,11 +55,11 @@ namespace RdC.Infrastructure.Factures.Persistance
                         newFactures.ForEach(facture =>
                         {
                             if (facture.MontantRestantDue == decimal.Zero)
-                                facture.Status = FactureStatus.Payee;
+                                facture.Status = FactureStatus.PAYEE;
                             else if (facture.MontantRestantDue == facture.MontantTotal)
-                                facture.Status = FactureStatus.Impayee;
+                                facture.Status = FactureStatus.IMPAYEE;
                             else
-                                facture.Status = FactureStatus.PartiellementPayee;
+                                facture.Status = FactureStatus.PARTIELLEMENT_PAYEE;
                         });
 
                         if (newFactures.Any())
@@ -84,7 +84,9 @@ namespace RdC.Infrastructure.Factures.Persistance
 
         public async Task<List<Facture>> ListAsync()
         {
-            return await _dbContext.Factures.ToListAsync();
+            return await _dbContext.Factures
+                .Where(f => f.Status != FactureStatus.DUPLIQUE)
+                .ToListAsync();
         }
 
         public async Task<Facture?> UpdateAsync(int FactureID, FactureUpdate factureUpdate)

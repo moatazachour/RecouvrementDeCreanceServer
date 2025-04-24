@@ -1,7 +1,6 @@
 ﻿using RdC.Domain.Abstrations;
 using RdC.Domain.Factures;
 using RdC.Domain.PaiementDates;
-using RdC.Domain.Paiements;
 using RdC.Domain.PlanDePaiements.Events;
 using System.Text.Json.Serialization;
 
@@ -11,8 +10,8 @@ namespace RdC.Domain.PlanDePaiements
     {
         private PlanDePaiement(
             int id,
-            decimal montantTotal, 
-            byte nombreDeEcheances, 
+            decimal montantTotal,
+            byte nombreDeEcheances,
             decimal montantRestant,
             DateTime creationDate,
             PlanStatus planStatus,
@@ -26,7 +25,7 @@ namespace RdC.Domain.PlanDePaiements
             PlanStatus = planStatus;
             IsLocked = isLocked;
         }
-        
+
         [JsonIgnore]
         public List<Facture> Factures = new();
 
@@ -51,7 +50,7 @@ namespace RdC.Domain.PlanDePaiements
                 nombreDeEcheances,
                 montantRestant: montantTotal,
                 creationDate,
-                PlanStatus.EnCours,
+                PlanStatus.EN_COURS,
                 isLocked: false);
 
             return plan;
@@ -59,7 +58,7 @@ namespace RdC.Domain.PlanDePaiements
 
         public PlanDePaiement Desactivate(int missedPaiementsCount)
         {
-            PlanStatus = PlanStatus.Annule;
+            PlanStatus = PlanStatus.ANNULE;
             IsLocked = true;
 
             RaiseDomainEvent(new DesactivatePlanDomainEvent(Id, missedPaiementsCount));

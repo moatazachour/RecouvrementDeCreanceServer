@@ -40,12 +40,12 @@ namespace RdC.Application.Paiements.Commands.CreatePaiement
 
             if (planDePaiement.MontantRestant == 0)
             {
-                planDePaiement.PlanStatus = Domain.PlanDePaiements.PlanStatus.Termine;
+                planDePaiement.PlanStatus = Domain.PlanDePaiements.PlanStatus.TERMINE;
                 planDePaiement.IsLocked = true;
 
                 foreach (var facture in planDePaiement.Factures)
                 {
-                    facture.Status = Domain.Factures.FactureStatus.Payee;
+                    facture.Status = Domain.Factures.FactureStatus.PAYEE;
                 }
             }
 

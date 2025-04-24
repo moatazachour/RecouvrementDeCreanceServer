@@ -4,7 +4,7 @@ using RdC.Application.Paiements.Commands.CreatePaiement;
 using RdC.Application.Paiements.Queries.GetPaiement;
 using RdC.Domain.DTO.Paiement;
 
-namespace RdC.Api.Controllers
+namespace RdC.Api.Controllers.Paiements
 {
     [Route("api/[controller]")]
     [ApiController]
