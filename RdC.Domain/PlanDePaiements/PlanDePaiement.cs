@@ -59,7 +59,6 @@ namespace RdC.Domain.PlanDePaiements
         public PlanDePaiement Desactivate(int missedPaiementsCount)
         {
             PlanStatus = PlanStatus.ANNULE;
-            IsLocked = true;
 
             RaiseDomainEvent(new DesactivatePlanDomainEvent(Id, missedPaiementsCount));
 
