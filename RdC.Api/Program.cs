@@ -21,6 +21,8 @@ builder.Services
 // Worker Service
 builder.Services.AddHostedService<PaymentReminderService>();
 
+QuestPDF.Settings.License = QuestPDF.Infrastructure.LicenseType.Community;
+
 var app = builder.Build();
 
 // enable CORS services to the container

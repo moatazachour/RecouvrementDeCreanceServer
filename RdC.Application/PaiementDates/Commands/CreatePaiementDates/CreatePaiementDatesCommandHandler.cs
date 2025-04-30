@@ -36,16 +36,6 @@ namespace RdC.Application.PaiementDates.Commands.CreatePaiementDates
 
             foreach (var paiementDate in request.createPaiementDatesRequest.PaiementDates)
             {
-                if (paiementDate.IsPaid)
-                {
-                    paiementDates.Add(PaiementDate.CreatePaidDate(
-                        paiementDate.PlanID,
-                        paiementDate.EcheanceDate,
-                        paiementDate.MontantDeEcheance));
-
-                    continue;
-                }
-
                 paiementDates.Add(PaiementDate.Create(
                     paiementDate.PlanID,
                     paiementDate.EcheanceDate,
@@ -60,20 +50,7 @@ namespace RdC.Application.PaiementDates.Commands.CreatePaiementDates
 
             await _domainEventDispatcher.DispatchEventsAsync(paiementDates[0]);
 
-            await _CheckForAdvancePaiement(paiementDates[0]);
-
             return Unit.Value;
-        }
-
-        private async Task _CheckForAdvancePaiement(PaiementDate paiementDate)
-        {
-            if (paiementDate.IsPaid)
-            {
-                await _mediator.Send(new CreatePaiementCommand(new CreatePaiementRequest(
-                    paiementDate.Id,
-                    paiementDate.MontantPayee,
-                    DateTime.Now)));
-            }
         }
     }
 }

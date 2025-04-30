@@ -15,7 +15,8 @@ namespace RdC.Domain.PlanDePaiements
             decimal montantRestant,
             DateTime creationDate,
             PlanStatus planStatus,
-            bool isLocked)
+            bool isLocked,
+            bool hasAdvance)
             : base(id)
         {
             MontantTotal = montantTotal;
@@ -24,6 +25,7 @@ namespace RdC.Domain.PlanDePaiements
             CreationDate = creationDate;
             PlanStatus = planStatus;
             IsLocked = isLocked;
+            HasAdvance = hasAdvance;
         }
 
         [JsonIgnore]
@@ -38,11 +40,13 @@ namespace RdC.Domain.PlanDePaiements
         public DateTime CreationDate { get; private set; }
         public PlanStatus PlanStatus { get; set; }
         public bool IsLocked { get; set; }
+        public bool HasAdvance {  get; set; }
 
         public static PlanDePaiement Create(
             decimal montantTotal,
             byte nombreDeEcheances,
-            DateTime creationDate)
+            DateTime creationDate,
+            bool hasAdvance)
         {
             var plan = new PlanDePaiement(
                 id: 0,
@@ -50,8 +54,9 @@ namespace RdC.Domain.PlanDePaiements
                 nombreDeEcheances,
                 montantRestant: montantTotal,
                 creationDate,
-                PlanStatus.EN_COURS,
-                isLocked: false);
+                PlanStatus.EN_ATTENTE,
+                isLocked: false,
+                hasAdvance);
 
             return plan;
         }

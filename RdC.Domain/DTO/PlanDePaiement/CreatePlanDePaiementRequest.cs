@@ -5,5 +5,6 @@ namespace RdC.Domain.DTO.PlanDePaiement
     public record CreatePlanDePaiementRequest(
         decimal MontantTotal, 
         byte NombreDeEcheances, 
-        List<int> FactureIDs);
+        List<int> FactureIDs,
+        bool HasAdvance);
 }

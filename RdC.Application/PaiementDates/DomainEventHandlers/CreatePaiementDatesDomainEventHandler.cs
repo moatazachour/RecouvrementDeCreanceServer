@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using RdC.Application.Common.Email;
 using RdC.Application.Common.Interfaces;
+using RdC.Application.Common.Pdf;
 using RdC.Domain.PaiementDates;
 using RdC.Domain.PaiementDates.Events;
 using RdC.Domain.PlanDePaiements;
@@ -14,17 +15,20 @@ namespace RdC.Application.PaiementDates.DomainEventHandlers
         private IPaiementDateRepository _paiementDateRepository;
         private IEmailService _emailService;
         private IAcheteurRepository _acheteurRepository;
+        private IPdfGeneratorService _pdfGeneratorService;
 
         public CreatePaiementDatesDomainEventHandler(
             IPlanDePaiementRepository planDePaiementRepository,
             IPaiementDateRepository paiementDateRepository,
             IEmailService emailService,
-            IAcheteurRepository acheteurRepository)
+            IAcheteurRepository acheteurRepository,
+            IPdfGeneratorService pdfGeneratorService)
         {
             _planDePaiementRepository = planDePaiementRepository;
             _paiementDateRepository = paiementDateRepository;
             _emailService = emailService;
             _acheteurRepository = acheteurRepository;
+            _pdfGeneratorService = pdfGeneratorService;
         }
 
         public async Task Handle(CreatePaiementDatesDomainEvent notification, CancellationToken cancellationToken)
@@ -45,10 +49,14 @@ namespace RdC.Application.PaiementDates.DomainEventHandlers
 
             string emailBody = _BuildEmailBody(plan, paiementsDates);
 
-            await _emailService.SendEmailAsync(
+            byte[] attachmentBytes = _pdfGeneratorService.GeneratePlanDePaiementPdf(plan, paiementsDates, acheteur);
+
+            await _emailService.SendEmailWithAttachmentAsync(
                 to: acheteurEmail,
-                subject: "Plan de paiement activée",
-                body: emailBody);
+                subject: "Votre Plan de Paiement",
+                body: emailBody,
+                attachmentBytes: attachmentBytes,
+                attachmentFileName: "PlanDePaiement.pdf");
 
         }
 
@@ -57,19 +65,9 @@ namespace RdC.Application.PaiementDates.DomainEventHandlers
             var sb = new StringBuilder();
             sb.AppendLine($"Bonjour,");
             sb.AppendLine();
-            sb.AppendLine($"Votre plan de paiement a été créé avec les détails suivants :");
-            sb.AppendLine($"- Montant Total : {plan.MontantTotal} TND");
-            sb.AppendLine($"- Nombre d'échéances : {plan.NombreDeEcheances}");
-            sb.AppendLine();
-            sb.AppendLine("Voici vos dates de paiement :");
+            sb.AppendLine($"Veuillez trouver ci-joint votre plan de paiement.");
+            sb.AppendLine($"Merci de bien vouloir signer le document afin de confirmer votre accord sur ce plan.");
 
-            foreach (var paiement in paiementDates)
-            {
-                sb.AppendLine(@$"- {paiement.EcheanceDate.ToString("dd/MM/yyyy")} : {paiement.MontantDeEcheance} TND");
-            }
-
-            sb.AppendLine();
-            sb.AppendLine("Merci de respecter les échéances pour éviter des pénalités.");
             sb.AppendLine();
             sb.AppendLine("Cordialement,");
             sb.AppendLine("Votre équipe de gestion");
