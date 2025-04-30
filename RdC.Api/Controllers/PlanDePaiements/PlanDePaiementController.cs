@@ -82,7 +82,7 @@ namespace RdC.Api.Controllers.PlanDePaiements
             }
         }
 
-        [HttpPost("VerifySignature/{id:int}")]
+        [HttpPost("VerifySignature")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
