@@ -70,6 +70,15 @@ namespace RdC.Domain.PlanDePaiements
             return this;
         }
 
+        public PlanDePaiement Activate()
+        {
+            PlanStatus = PlanStatus.EN_COURS;
+
+            RaiseDomainEvent(new ActivatePlanDomainEvent(this));
+
+            return this;
+        }
+
         public void AddFactures(List<Facture> factures)
         {
             foreach (var facture in factures)
