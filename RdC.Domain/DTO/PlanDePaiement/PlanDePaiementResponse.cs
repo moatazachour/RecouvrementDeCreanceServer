@@ -13,6 +13,7 @@ namespace RdC.Domain.DTO.PlanDePaiement
         DateTime creationDate,
         PlanStatus planStatus,
         bool isLocked,
+        bool hasAdvance,
         List<FactureResponse> Factures,
         List<PaiementDateResponse> PaiementDates);
 }
