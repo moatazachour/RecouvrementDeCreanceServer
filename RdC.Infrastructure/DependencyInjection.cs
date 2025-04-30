@@ -43,6 +43,7 @@ namespace RdC.Infrastructure
 
             services.AddTransient<IEmailService, EmailService>();
             services.AddTransient<IPdfGeneratorService, PdfGeneratorService>();
+            services.AddTransient<IQuestPdfSignatureVerifier, QuestPdfSignatureVerifier>();
 
             return services;
         }

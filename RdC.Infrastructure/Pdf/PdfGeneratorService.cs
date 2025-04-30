@@ -10,6 +10,8 @@ namespace RdC.Infrastructure.Pdf
 {
     public class PdfGeneratorService : IPdfGeneratorService
     {
+        private const string SignatureMarker = "SIGNATURE_FIELD_7X9P3";
+
         public byte[] GeneratePlanDePaiementPdf(
             PlanDePaiement plan,
             List<PaiementDate> paiementDates,
@@ -26,35 +28,32 @@ namespace RdC.Infrastructure.Pdf
                     // Header
                     page.Header().AlignCenter().Text("Plan de Paiement").FontSize(20).Bold();
 
-                    // Content
-                    page.Content().Column(column =>
+                    // SINGLE Content section
+                    page.Content().Column(col =>
                     {
-                        column.Spacing(20);
+                        col.Spacing(20);
 
-                        // Acheteur name
-                        column.Item().PaddingTop(10).Text($"Acheteur : {acheteur.Nom} {acheteur.Prenom}").Bold();
+                        col.Item().PaddingTop(10).Text($"Acheteur : {acheteur.Nom} {acheteur.Prenom}").Bold();
 
-                        // Basic Plan Info
-                        column.Item().PaddingTop(25).Row(row =>
+                        col.Item().PaddingTop(25).Row(row =>
                         {
                             row.RelativeItem().Text($"Montant Total : {plan.MontantTotal} TND").Bold();
                             row.RelativeItem().Text($"Nombre d'échéances : {plan.NombreDeEcheances}").Bold();
                         });
 
-                        // Factures Info Table
+                        // Factures Table
                         if (plan.Factures.Any())
                         {
-                            column.Item().Text("Factures Concernées :").Bold().FontSize(14);
-                            column.Item().Table(table =>
+                            col.Item().Text("Factures Concernées :").Bold().FontSize(14);
+                            col.Item().Table(table =>
                             {
                                 table.ColumnsDefinition(columns =>
                                 {
-                                    columns.RelativeColumn(1); // Référence
-                                    columns.RelativeColumn(2); // Montant
-                                    columns.RelativeColumn(2); // Date
+                                    columns.RelativeColumn(1);
+                                    columns.RelativeColumn(2);
+                                    columns.RelativeColumn(2);
                                 });
 
-                                // Header row
                                 table.Header(header =>
                                 {
                                     header.Cell().Element(CellStyle).Text("Référence").Bold();
@@ -68,20 +67,17 @@ namespace RdC.Infrastructure.Pdf
                                     table.Cell().Element(CellStyle).Text($"{facture.MontantRestantDue} TND");
                                     table.Cell().Element(CellStyle).Text(facture.DateEcheance.ToString("dd/MM/yyyy"));
                                 }
-
-                                IContainer CellStyle(IContainer container) =>
-                                    container.Padding(5).BorderBottom(1).BorderColor(Colors.Grey.Lighten2);
                             });
                         }
 
                         // Échéances Table
-                        column.Item().Text("Échéances :").Bold().FontSize(14);
-                        column.Item().Table(table =>
+                        col.Item().Text("Échéances :").Bold().FontSize(14);
+                        col.Item().Table(table =>
                         {
                             table.ColumnsDefinition(columns =>
                             {
-                                columns.RelativeColumn(2); // Date
-                                columns.RelativeColumn(2); // Montant
+                                columns.RelativeColumn(2);
+                                columns.RelativeColumn(2);
                             });
 
                             table.Header(header =>
@@ -95,26 +91,40 @@ namespace RdC.Infrastructure.Pdf
                                 table.Cell().Element(CellStyle).Text(echeance.EcheanceDate.ToString("dd/MM/yyyy"));
                                 table.Cell().Element(CellStyle).Text($"{echeance.MontantDeEcheance} TND");
                             }
-
-                            IContainer CellStyle(IContainer container) =>
-                                container.Padding(5).BorderBottom(1).BorderColor(Colors.Grey.Lighten2);
                         });
 
-                        // Signature Box - Clear for OCR
-                        column.Item().PaddingTop(50).Column(sig =>
+                        // SIGNATURE BOX IN CONTENT
+                        col.Item().PaddingTop(40).Row(row =>
                         {
-                            sig.Item().Text("Signature de l'Acheteur :").FontSize(12).Bold();
+                            row.RelativeItem(); // Spacer
+                            row.ConstantItem(250).Column(sigCol =>
+                            {
+                                sigCol.Item().Text("Signature de l'Acheteur :").FontSize(12).Bold();
 
-                            sig.Item().Height(50).Border(1).Padding(5)
-                                .AlignLeft().AlignBottom()
-                                .Text(" "); // empty space for signature (for OCR)
+                                // Signature box container
+                                sigCol.Item().Element(signatureContainer =>
+                                {
+                                    signatureContainer
+                                        .Height(50)
+                                        .Width(250)
+                                        .Border(1)
+                                        .Padding(5)
+                                        .AlignCenter()
+                                        .AlignMiddle()
+                                        .Background(Colors.White)
+                                        // Hidden marker (invisible to users)
+                                        .Text(SignatureMarker)
+                                        .FontColor(Colors.Transparent)
+                                        .FontSize(1);
+                                });
 
-                            sig.Item().PaddingTop(10).Text("Date : ___________________");
+                                sigCol.Item().PaddingTop(5).AlignRight().Text("Date : ___________________");
+                            });
                         });
                     });
 
-                    // Footer
-                    page.Footer().AlignCenter().Text("Merci de respecter les échéances pour éviter toute pénalité.").Italic().FontSize(10);
+                    IContainer CellStyle(IContainer container) =>
+                        container.Padding(5).BorderBottom(1).BorderColor(Colors.Grey.Lighten2);
                 });
             }).GeneratePdf();
         }
