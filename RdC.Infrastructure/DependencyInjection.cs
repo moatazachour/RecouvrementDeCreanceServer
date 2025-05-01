@@ -13,6 +13,7 @@ using RdC.Infrastructure.Paiements.Persistance;
 using RdC.Infrastructure.Pdf;
 using RdC.Infrastructure.PlanDePaiements.Persistance;
 using RdC.Infrastructure.Relances.Persistance.Email;
+using RdC.Infrastructure.Relances.Persistance.SMS;
 
 namespace RdC.Infrastructure
 {
@@ -37,6 +38,7 @@ namespace RdC.Infrastructure
             services.AddScoped<IPaiementDateRepository, PaiementDateRepository>();
             services.AddScoped<IPaiementRepository, PaiementRepository>();
             services.AddScoped<IEmailRelanceRepository, EmailRelanceRepository>();
+            services.AddScoped<ISMSRelanceRepository, SMSRelanceRepository>();
             services.AddScoped<ILitigeRepository, LitigeRepository>();
             services.AddScoped<ILitigeTypeRepository, LitigeTypeRepository>();
             services.AddScoped<ILitigeJustificatifRepository, LitigeJustificatifRepository>();

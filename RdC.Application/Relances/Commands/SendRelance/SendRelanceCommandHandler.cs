@@ -12,6 +12,7 @@ namespace RdC.Application.Relances.Commands.SendRelance
         : IRequestHandler<SendRelanceCommand, bool>
     {
         private readonly IEmailRelanceRepository _emailRelanceRepository;
+        private readonly ISMSRelanceRepository _smsRelanceRepository;
         private readonly IPaiementDateRepository _paiementDateRepository;
         private readonly IPlanDePaiementRepository _planDePaiementRepository;
         private readonly IAcheteurRepository _acheteurRepository;
@@ -20,6 +21,7 @@ namespace RdC.Application.Relances.Commands.SendRelance
 
         public SendRelanceCommandHandler(
             IEmailRelanceRepository emailRelanceRepository,
+            ISMSRelanceRepository smsRelanceRepository,
             IPaiementDateRepository paiementDateRepository,
             IAcheteurRepository acheteurRepository,
             IUnitOfWork unitOfWork,
@@ -27,6 +29,7 @@ namespace RdC.Application.Relances.Commands.SendRelance
             IPlanDePaiementRepository planDePaiementRepository)
         {
             _emailRelanceRepository = emailRelanceRepository;
+            _smsRelanceRepository = smsRelanceRepository;
             _paiementDateRepository = paiementDateRepository;
             _acheteurRepository = acheteurRepository;
             _unitOfWork = unitOfWork;
@@ -58,37 +61,44 @@ namespace RdC.Application.Relances.Commands.SendRelance
             }
 
             string subject = string.Empty;
-            string emailBody = string.Empty;
+            string body = string.Empty;
 
             if (request.RelanceContext == RelanceContext.UpcomingPaymentReminder)
             {
                 subject = "Rappel de Paiement à Venir";
-                emailBody = _BuildUpcomingPaymentReminder(currentPaiementDate);
+                body = _BuildUpcomingPaymentReminder(currentPaiementDate);
             }
 
             if (request.RelanceContext == RelanceContext.OverduePaymentReminder)
             {
                 subject = "Rappel de Paiement en Retard";
-                emailBody = _BuildOverduePaymentReminder(currentPaiementDate);
+                body = _BuildOverduePaymentReminder(currentPaiementDate);
             }
 
             if (request.RelanceContext == RelanceContext.UpcomingPaymentReminderWithUnpaidPreviousPayment)
             {
                 subject = "Rappel de Paiement à Venir";
-                emailBody = await _BuildUpcomingPaymentReminderWithUnpaidPreviousPaiement(currentPaiementDate);
+                body = await _BuildUpcomingPaymentReminderWithUnpaidPreviousPaiement(currentPaiementDate);
             }
 
             var emailRelance = EmailRelance.Send(
                 currentPaiementDate.Id,
                 acheteur.Email,
-                emailBody
+                body
                 );
+
+            var smsRelance = SMSRelance.Send(
+                currentPaiementDate.Id,
+                acheteur.Telephone,
+                body);
 
             await _emailRelanceRepository.AddAsync(emailRelance);
 
+            await _smsRelanceRepository.AddAsync(smsRelance);
+
             await _unitOfWork.CommitChangesAsync();
 
-            currentPaiementDate.RaiseDomainEvent(new SendEmailDomainEvent(acheteur.Email, subject, emailBody));
+            currentPaiementDate.RaiseDomainEvent(new SendEmailDomainEvent(acheteur.Email, subject, body));
 
             await _domainEventDispatcher.DispatchEventsAsync(currentPaiementDate);
 
