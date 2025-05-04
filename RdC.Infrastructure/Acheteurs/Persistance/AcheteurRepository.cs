@@ -50,7 +50,8 @@ namespace RdC.Infrastructure.Acheteurs.Persistance
                                                 dto.Prenom,
                                                 dto.Adresse,
                                                 dto.Email,
-                                                dto.Telephone))
+                                                dto.Telephone,
+                                                score: 100))
                             .ToList();
 
                         if (newAcheteurs.Any())

@@ -53,7 +53,7 @@ namespace RdC.Application.Litiges.Commands.ResolveDuplicated
             {
                 litige.Reject();
 
-                currentFacture.GetFactureStatus();
+                currentFacture.CheckFactureStatus();
 
                 isAccepted = false;
             }

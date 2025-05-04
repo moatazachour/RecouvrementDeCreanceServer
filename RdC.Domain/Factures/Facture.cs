@@ -40,7 +40,7 @@ namespace RdC.Domain.Factures
 
         private Facture() { }
 
-        public void GetFactureStatus()
+        public void CheckFactureStatus()
         {
             if (MontantRestantDue == 0)
             {

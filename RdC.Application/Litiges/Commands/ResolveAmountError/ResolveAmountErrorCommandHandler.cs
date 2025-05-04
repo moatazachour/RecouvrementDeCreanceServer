@@ -42,7 +42,7 @@ namespace RdC.Application.Litiges.Commands.ResolveAmountError
                 request.CorrectedTotalAmount,
                 request.CorrectedAmountDue);
 
-            facture.GetFactureStatus();
+            facture.CheckFactureStatus();
 
             await _unitOfWork.CommitChangesAsync();
 
