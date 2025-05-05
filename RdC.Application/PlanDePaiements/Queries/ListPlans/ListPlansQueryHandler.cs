@@ -28,6 +28,7 @@ namespace RdC.Application.PlanDePaiements.Queries.ListPlans
                                             p.CreationDate,
                                             p.PlanStatus,
                                             p.IsLocked,
+                                            p.HasAdvance,
                                             p.Factures.Select(facture => new FactureResponse(
                                                                                 facture.Id,
                                                                                 facture.NumFacture,

@@ -42,7 +42,8 @@ namespace RdC.Infrastructure.Factures.Persistance
                     if (allFacturesDto != null)
                     {
                         var newFactures = allFacturesDto
-                            .Where(dto => !currentFactures.Exists(cf => cf.Id == dto.FactureID))
+                            .Where(dto => !currentFactures.Exists(cf => cf.Id == dto.FactureID)
+                                           && dto.DateDeEcheance < DateOnly.FromDateTime(DateTime.Today))
                             .Select(dto => new Facture(
                                                 dto.FactureID,
                                                 dto.NumFacture,

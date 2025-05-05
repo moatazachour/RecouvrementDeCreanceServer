@@ -11,19 +11,16 @@ namespace RdC.Application.PlanDePaiements.Commands.CreatePlan
         private readonly IPlanDePaiementRepository _planDePaiementRepository;
         private readonly IFactureRepository _factureRepository;
         private readonly IUnitOfWork _unitOfWork;
-        private readonly IDomainEventDispatcher _domainEventDispatcher;
 
         public CreatePlanCommandHandler(
             IPlanDePaiementRepository planDePaiementRepository,
             IPaiementDateRepository paiementDateRepository,
             IFactureRepository factureRepository,
-            IUnitOfWork unitOfWork,
-            IDomainEventDispatcher domainEventDispatcher)
+            IUnitOfWork unitOfWork)
         {
             _planDePaiementRepository = planDePaiementRepository;
             _factureRepository = factureRepository;
             _unitOfWork = unitOfWork;
-            _domainEventDispatcher = domainEventDispatcher;
         }
 
         public async Task<int> Handle(CreatePlanCommand request, CancellationToken cancellationToken)
@@ -34,7 +31,8 @@ namespace RdC.Application.PlanDePaiements.Commands.CreatePlan
             var plan = PlanDePaiement.Create(
                 request.createPlanDePaiementRequest.MontantTotal,
                 request.createPlanDePaiementRequest.NombreDeEcheances,
-                DateTime.Now);
+                DateTime.Now,
+                request.createPlanDePaiementRequest.HasAdvance);
 
             plan.AddFactures(factures);
 

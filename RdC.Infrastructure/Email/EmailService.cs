@@ -41,5 +41,42 @@ namespace RdC.Infrastructure.Email
                 throw;
             }
         }
+
+        public async Task SendEmailWithAttachmentAsync(
+            string to, 
+            string subject, 
+            string body, 
+            byte[] attachmentBytes, 
+            string attachmentFileName)
+        {
+            try
+            {
+                using (var smtpClient = new SmtpClient(_smtpHost, _smtpPort))
+                {
+                    smtpClient.Credentials = new NetworkCredential(_smtpUser, _stmpPass);
+                    smtpClient.EnableSsl = true;
+
+                    using (var mailMessage = new MailMessage())
+                    {
+                        mailMessage.From = new MailAddress(_smtpUser);
+                        mailMessage.To.Add(to);
+                        mailMessage.Subject = subject;
+                        mailMessage.Body = body;
+                        mailMessage.IsBodyHtml = false;
+
+                        var stream = new MemoryStream(attachmentBytes);
+                        var attachment = new Attachment(stream, attachmentFileName, "application/pdf");
+                        mailMessage.Attachments.Add(attachment);
+
+                        await smtpClient.SendMailAsync(mailMessage);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error sending email with attachment: {ex.Message}");
+                throw;
+            }
+        }
     }
 }

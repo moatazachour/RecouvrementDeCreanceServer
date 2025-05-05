@@ -1,7 +1,9 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using RdC.Application.PlanDePaiements.Commands.ActivatePlan;
 using RdC.Application.PlanDePaiements.Commands.CreatePlan;
 using RdC.Application.PlanDePaiements.Commands.LockPlan;
+using RdC.Application.PlanDePaiements.Commands.VerifyPlanSignature;
 using RdC.Application.PlanDePaiements.Queries.GetPlan;
 using RdC.Application.PlanDePaiements.Queries.ListPlans;
 using RdC.Domain.DTO.PlanDePaiement;
@@ -74,6 +76,67 @@ namespace RdC.Api.Controllers.PlanDePaiements
             {
                 var planId = await _mediator.Send(command);
                 return CreatedAtAction(nameof(GetPlanById), new { id = planId }, planId);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
+        [HttpPost("VerifySignature")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> VerifyPlanSignature(
+            [FromForm] List<IFormFile> pdfFiles)
+        {
+            // I used List<IFormFile> temporary because swagger dont support IFormFile alone
+            var pdfFile = pdfFiles.FirstOrDefault();
+
+            if (pdfFile is null || pdfFile.Length == 0)
+            {
+                return BadRequest("Invalid PDF files.");
+            }
+
+            if (Path.GetExtension(pdfFile.FileName).ToLower() != ".pdf")
+            {
+                return BadRequest("Only PDF files are accepted.");
+            }
+
+            using var stream = new MemoryStream();
+            await pdfFile.CopyToAsync(stream);
+            var pdfBytes = stream.ToArray();
+
+            var command = new VerifyPlanSignatureCommand(pdfBytes);
+
+            try
+            {
+                var hasSignature = await _mediator.Send(command);
+
+                return Ok(hasSignature);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
+        [HttpPut("Activate/{id:int}")]
+        [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> Activate([FromRoute] int id)
+        {
+            var command = new ActivatePlanCommand(id);
+
+            try
+            {
+                var isActivated = await _mediator.Send(command);
+
+                if (!isActivated)
+                    return NotFound($"Plan with ID {id} not found.");
+
+                return Ok(isActivated);
             }
             catch (Exception ex)
             {
