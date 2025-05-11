@@ -32,6 +32,7 @@ namespace RdC.Application.PlanDePaiements.Queries.GetPlan
                 planDePaiement.PlanStatus,
                 planDePaiement.IsLocked,
                 planDePaiement.HasAdvance,
+                planDePaiement.CreatedByUserID,
                 planDePaiement.Factures.Select(facture => new FactureResponse(
                                                             facture.Id,
                                                             facture.NumFacture,

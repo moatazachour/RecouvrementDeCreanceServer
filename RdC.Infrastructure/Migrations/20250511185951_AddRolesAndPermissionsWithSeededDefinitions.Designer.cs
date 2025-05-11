@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RdC.Infrastructure.Common.Persistance;
 
@@ -11,9 +12,11 @@ using RdC.Infrastructure.Common.Persistance;
 namespace RdC.Infrastructure.Migrations
 {
     [DbContext(typeof(RecouvrementDBContext))]
-    partial class RecouvrementDBContextModelSnapshot : ModelSnapshot
+    [Migration("20250511185951_AddRolesAndPermissionsWithSeededDefinitions")]
+    partial class AddRolesAndPermissionsWithSeededDefinitions
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -275,9 +278,6 @@ namespace RdC.Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("CreatedByUserID")
-                        .HasColumnType("int");
-
                     b.Property<DateTime>("CreationDate")
                         .HasColumnType("DATETIME");
 
@@ -300,8 +300,6 @@ namespace RdC.Infrastructure.Migrations
                         .HasColumnType("TINYINT");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("CreatedByUserID");
 
                     b.ToTable("PlanDePaiements");
                 });
@@ -435,39 +433,6 @@ namespace RdC.Infrastructure.Migrations
                     b.ToTable("RolePermissions");
                 });
 
-            modelBuilder.Entity("RdC.Domain.Users.User", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("UserID");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("DATETIME");
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PasswordHash")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("RoleID")
-                        .HasColumnType("int");
-
-                    b.Property<byte>("Status")
-                        .HasColumnType("TINYINT");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("RoleID");
-
-                    b.ToTable("Users");
-                });
-
             modelBuilder.Entity("RdC.Domain.Relances.EmailRelance", b =>
                 {
                     b.HasBaseType("RdC.Domain.Relances.Relance");
@@ -580,17 +545,6 @@ namespace RdC.Infrastructure.Migrations
                     b.Navigation("PaiementDate");
                 });
 
-            modelBuilder.Entity("RdC.Domain.PlanDePaiements.PlanDePaiement", b =>
-                {
-                    b.HasOne("RdC.Domain.Users.User", "User")
-                        .WithMany("planDePaiements")
-                        .HasForeignKey("CreatedByUserID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("RdC.Domain.Relances.Relance", b =>
                 {
                     b.HasOne("RdC.Domain.PaiementDates.PaiementDate", "PaiementDate")
@@ -619,17 +573,6 @@ namespace RdC.Infrastructure.Migrations
                     b.Navigation("Role");
 
                     b.Navigation("permissionDefinition");
-                });
-
-            modelBuilder.Entity("RdC.Domain.Users.User", b =>
-                {
-                    b.HasOne("RdC.Domain.Users.Role", "Role")
-                        .WithMany("Users")
-                        .HasForeignKey("RoleID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Role");
                 });
 
             modelBuilder.Entity("RdC.Domain.Relances.EmailRelance", b =>
@@ -685,13 +628,6 @@ namespace RdC.Infrastructure.Migrations
             modelBuilder.Entity("RdC.Domain.Users.Role", b =>
                 {
                     b.Navigation("RolePermissions");
-
-                    b.Navigation("Users");
-                });
-
-            modelBuilder.Entity("RdC.Domain.Users.User", b =>
-                {
-                    b.Navigation("planDePaiements");
                 });
 #pragma warning restore 612, 618
         }

@@ -6,7 +6,7 @@ using System.Text.Json.Serialization;
 
 namespace RdC.Domain.Factures
 {
-    public class Facture : Entity
+    public sealed class Facture : Entity
     {
         public Facture(
             int Id,

@@ -2,6 +2,7 @@
 using RdC.Domain.Factures;
 using RdC.Domain.PaiementDates;
 using RdC.Domain.PlanDePaiements.Events;
+using RdC.Domain.Users;
 using System.Text.Json.Serialization;
 
 namespace RdC.Domain.PlanDePaiements
@@ -16,7 +17,8 @@ namespace RdC.Domain.PlanDePaiements
             DateTime creationDate,
             PlanStatus planStatus,
             bool isLocked,
-            bool hasAdvance)
+            bool hasAdvance,
+            int createdByUserID)
             : base(id)
         {
             MontantTotal = montantTotal;
@@ -26,6 +28,7 @@ namespace RdC.Domain.PlanDePaiements
             PlanStatus = planStatus;
             IsLocked = isLocked;
             HasAdvance = hasAdvance;
+            CreatedByUserID = createdByUserID;
         }
 
         [JsonIgnore]
@@ -42,11 +45,15 @@ namespace RdC.Domain.PlanDePaiements
         public bool IsLocked { get; set; }
         public bool HasAdvance {  get; set; }
 
+        public int CreatedByUserID { get; set; }
+        public User User { get; set; }
+
         public static PlanDePaiement Create(
             decimal montantTotal,
             byte nombreDeEcheances,
             DateTime creationDate,
-            bool hasAdvance)
+            bool hasAdvance,
+            int createdBy)
         {
             var plan = new PlanDePaiement(
                 id: 0,
@@ -56,7 +63,8 @@ namespace RdC.Domain.PlanDePaiements
                 creationDate,
                 PlanStatus.EN_ATTENTE,
                 isLocked: false,
-                hasAdvance);
+                hasAdvance,
+                createdBy);
 
             return plan;
         }

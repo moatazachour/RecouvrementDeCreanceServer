@@ -43,6 +43,10 @@ namespace RdC.Infrastructure.PlanDePaiements.Persistance
                 .HasColumnType("BIT")
                 .IsRequired();
 
+            builder.HasOne(p => p.User)
+                .WithMany(u => u.planDePaiements)
+                .HasForeignKey(p => p.CreatedByUserID);
+
             builder.HasMany(plan => plan.Factures)
                 .WithMany(facture => facture.PlanDePaiements)
                 .UsingEntity("Factures_PlanDePaiements",

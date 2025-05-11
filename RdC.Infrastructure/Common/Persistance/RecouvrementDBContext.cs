@@ -7,6 +7,7 @@ using RdC.Domain.PaiementDates;
 using RdC.Domain.Paiements;
 using RdC.Domain.PlanDePaiements;
 using RdC.Domain.Relances;
+using RdC.Domain.Users;
 using System.Reflection;
 
 namespace RdC.Infrastructure.Common.Persistance
@@ -24,6 +25,10 @@ namespace RdC.Infrastructure.Common.Persistance
         public DbSet<Litige> Litiges { get; set; }
         public DbSet<LitigeType> LitigeTypes { get; set; }
         public DbSet<LitigeJustificatif> Justificatifs { get; set; }
+        public DbSet<PermissionDefinition> PermissionDefinitions { get; set; }
+        public DbSet<RolePermission> RolePermissions { get; set; }
+        public DbSet<Role> Roles { get; set; }
+        public DbSet<User> Users { get; set; }
 
         public RecouvrementDBContext(DbContextOptions options) : base(options)
         {
