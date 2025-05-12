@@ -21,14 +21,14 @@ namespace RdC.Domain.Users
         }
 
         public int PermissionDefinitionID { get; private set; }
-        public PermissionDefinition permissionDefinition { get; private set; }
+        public PermissionDefinition PermissionDefinition { get; private set; }
 
         public int RoleID { get; private set; }
         public Role Role {  get; private set; }
 
-        public bool CanRead { get; private set; }
-        public bool CanWrite { get; private set; }
-        public bool CanCreate { get; private set; }
+        public bool CanRead { get; set; }
+        public bool CanWrite { get; set; }
+        public bool CanCreate { get; set; }
 
         private RolePermission() { }
     }

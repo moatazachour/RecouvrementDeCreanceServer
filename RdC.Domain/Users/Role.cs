@@ -12,10 +12,18 @@ namespace RdC.Domain.Users
             RoleName = roleName;
         }
 
-        public string RoleName { get; private set; }
-        public List<RolePermission> RolePermissions { get; private set; } = new();
+        public string RoleName { get; set; }
+        public List<RolePermission> RolePermissions { get; set; } = new();
         public List<User> Users { get; private set; } = new();
 
-        public Role() { }
+        public static Role Create(
+            string roleName)
+        {
+            return new Role(
+                id: 0,
+                roleName: roleName);
+        }
+
+        private Role() { }
     }
 }

@@ -1,5 +1,5 @@
 ﻿using MediatR;
-using RdC.Domain.DTO.Permission;
+using RdC.Domain.DTO.Role;
 
 namespace RdC.Application.Permissions.Queries.ListPermissions
 {

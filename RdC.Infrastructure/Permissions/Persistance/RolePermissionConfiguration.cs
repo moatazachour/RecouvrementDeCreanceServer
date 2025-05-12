@@ -14,7 +14,7 @@ namespace RdC.Infrastructure.Permissions.Persistance
                 .WithMany(r => r.RolePermissions)
                 .HasForeignKey(rp => rp.RoleID);
 
-            builder.HasOne(rp => rp.permissionDefinition)
+            builder.HasOne(rp => rp.PermissionDefinition)
                 .WithMany()
                 .HasForeignKey(rp => rp.PermissionDefinitionID);
 

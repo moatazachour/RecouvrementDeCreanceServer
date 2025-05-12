@@ -1,7 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using RdC.Application.Permissions.Queries.ListPermissions;
-using RdC.Domain.DTO.Permission;
+using RdC.Domain.DTO.Role;
 
 namespace RdC.Api.Controllers.Permissions
 {

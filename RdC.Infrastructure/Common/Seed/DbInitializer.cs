@@ -17,7 +17,7 @@ namespace RdC.Infrastructure.Common.Seed
 
             if (adminRole is null)
             {
-                adminRole = new Role(0, "Administrateur");
+                adminRole = Role.Create("Administrateur");
                 context.Roles.Add(adminRole);
                 await context.SaveChangesAsync();
 
