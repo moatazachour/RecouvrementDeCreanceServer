@@ -41,10 +41,12 @@ namespace RdC.Infrastructure.Common.Seed
             // Seed administrator
             if (!context.Users.Any())
             {
+                var adminUsername = "admin";
                 var adminEmail = "moataz.achour01@gmail.com";
                 var hashedPassword = BCrypt.Net.BCrypt.HashPassword("admin");
 
                 var user = User.CreateAdminUser(
+                    adminUsername,
                     adminEmail,
                     hashedPassword,
                     adminRole.Id);

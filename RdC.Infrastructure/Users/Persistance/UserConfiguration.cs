@@ -13,11 +13,12 @@ namespace RdC.Infrastructure.Users.Persistance
             builder.Property(u => u.Id)
                 .HasColumnName("UserID");
 
+            builder.Property(u => u.Username);
+
             builder.Property(u => u.Email)
                 .IsRequired();
 
-            builder.Property(u => u.PasswordHash)
-                .IsRequired();
+            builder.Property(u => u.PasswordHash);
 
             builder.Property(u => u.CreatedAt)
                 .HasColumnType("DATETIME")
