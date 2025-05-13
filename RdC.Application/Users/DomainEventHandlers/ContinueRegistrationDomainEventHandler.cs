@@ -32,7 +32,7 @@ namespace RdC.Application.Users.DomainEventHandlers
 
             string email = user.Email;
             string emailBody = _BuildEmailBody(user);
-            string subject = $"Bienvenue {user.Username}!";
+            string subject = $"Bienvenue sur la plateforme RdC, {user.Username} !";
 
             await _emailService.SendEmailAsync(
                 to: email,
@@ -43,8 +43,13 @@ namespace RdC.Application.Users.DomainEventHandlers
         private string _BuildEmailBody(User user)
         {
             var sb = new StringBuilder();
-            sb.AppendLine($"WELCOME MESSAGE");
-
+            sb.AppendLine($"Bonjour {user.Username},");
+            sb.AppendLine();
+            sb.AppendLine("Votre inscription a été complétée avec succès !");
+            sb.AppendLine("Bienvenue sur notre plateforme de gestion de créances.");
+            sb.AppendLine("Vous pouvez désormais vous connecter et accéder à toutes les fonctionnalités.");
+            sb.AppendLine();
+            sb.AppendLine("N'hésitez pas à nous contacter en cas de besoin.");
             sb.AppendLine();
             sb.AppendLine("Cordialement,");
             sb.AppendLine("Votre équipe de gestion");

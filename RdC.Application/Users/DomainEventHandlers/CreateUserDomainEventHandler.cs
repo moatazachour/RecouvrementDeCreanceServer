@@ -32,7 +32,7 @@ namespace RdC.Application.Users.DomainEventHandlers
 
             string email = user.Email;
             string emailBody = _BuildEmailBody(user);
-            string subject = "Terminer l'inscription";
+            string subject = "Terminer votre inscription sur la plateforme RdC";
 
             await _emailService.SendEmailAsync(
                 to: email,
@@ -43,12 +43,12 @@ namespace RdC.Application.Users.DomainEventHandlers
         private string _BuildEmailBody(User user)
         {
             var sb = new StringBuilder();
-            sb.AppendLine($"Bonjour,");
+            sb.AppendLine("Bonjour,");
             sb.AppendLine();
-            sb.AppendLine($"Votre compte is added in the system.");
-            sb.AppendLine($"Merci de bien clicker sur le lien au dessous pour terminer votre inscription.");
-            sb.AppendLine($"PUT THE LINK HERE");
-
+            sb.AppendLine("Un compte a été créé pour vous sur notre plateforme de gestion.");
+            sb.AppendLine("Pour activer votre compte, veuillez finaliser votre inscription en cliquant sur le lien ci-dessous :");
+            sb.AppendLine();
+            sb.AppendLine("[LIEN POUR TERMINER L’INSCRIPTION]");
             sb.AppendLine();
             sb.AppendLine("Cordialement,");
             sb.AppendLine("Votre équipe de gestion");
