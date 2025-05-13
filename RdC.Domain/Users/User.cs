@@ -1,5 +1,6 @@
 ﻿using RdC.Domain.Abstrations;
 using RdC.Domain.PlanDePaiements;
+using RdC.Domain.Users.Events;
 
 namespace RdC.Domain.Users
 {
@@ -67,6 +68,18 @@ namespace RdC.Domain.Users
                 createdAt: DateTime.Now);
 
             return user;
+        }
+
+        public void ContinueRegistration(
+            string username,
+            string passwordHash)
+        {
+            Username = username;
+            PasswordHash = passwordHash;
+
+            Status = UserStatus.ACTIVE;
+
+            RaiseDomainEvent(new ContinueRegistrationDomainEvent(Id));
         }
 
         private User() { }

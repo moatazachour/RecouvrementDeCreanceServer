@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using RdC.Application.Users.Commands.CompleteUserRegistration;
 using RdC.Application.Users.Commands.CreateUser;
 using RdC.Application.Users.Queries.GetUser;
 using RdC.Application.Users.Queries.GetUsers;
@@ -46,6 +47,7 @@ namespace RdC.Api.Controllers.Users
             }
         }
 
+
         [HttpGet("{id:int}")]
         [ProducesResponseType(typeof(UserResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -71,6 +73,7 @@ namespace RdC.Api.Controllers.Users
             }
         }
 
+
         [HttpGet("All")]
         [ProducesResponseType(typeof(List<UserResponse>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -84,6 +87,28 @@ namespace RdC.Api.Controllers.Users
                 var userList = await _mediator.Send(query);
 
                 return Ok(userList);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
+
+        [HttpPut("CompleteRegistration")]
+        public async Task<IActionResult> CompleteRegistration(
+            [FromBody] CompleteRegistrationRequest request)
+        {
+            var command = new CompleteUserRegistrationCommand(
+                request.userEmail,
+                request.username,
+                request.password);
+
+            try
+            {
+                bool isRegistred = await _mediator.Send(command);
+
+                return Ok(isRegistred);
             }
             catch (Exception ex)
             {

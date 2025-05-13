@@ -30,6 +30,11 @@ namespace RdC.Infrastructure.Users.Persistance
                 .ToListAsync();
         }
 
+        public async Task<User?> GetByEmailAsync(string email)
+        {
+            return await _dbContext.Users.FirstOrDefaultAsync(u => u.Email == email.Trim());
+        }
+
         public async Task<User?> GetByIdAsync(int userID)
         {
             return await _dbContext.Users
@@ -42,6 +47,11 @@ namespace RdC.Infrastructure.Users.Persistance
         public async Task<bool> IsEmailExistAsync(string email)
         {
             return await _dbContext.Users.AnyAsync(u => u.Email.ToLower() == email.ToLower());
+        }
+
+        public async Task<bool> IsUsernameExistAsync(string username)
+        {
+            return await _dbContext.Users.AnyAsync(u => u.Username == username);
         }
     }
 }

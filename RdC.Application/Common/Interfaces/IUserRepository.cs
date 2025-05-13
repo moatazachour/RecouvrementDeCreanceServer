@@ -8,8 +8,12 @@ namespace RdC.Application.Common.Interfaces
 
         Task<User?> GetByIdAsync(int userID);
 
+        Task<User?> GetByEmailAsync(string email);
+
         Task<List<User>> GetAllAsync();
 
         Task<bool> IsEmailExistAsync(string email);
+
+        Task<bool> IsUsernameExistAsync(string username);
     }
 }
