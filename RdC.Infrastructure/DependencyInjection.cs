@@ -18,6 +18,7 @@ using RdC.Infrastructure.Relances.Persistance.Email;
 using RdC.Infrastructure.Relances.Persistance.SMS;
 using RdC.Infrastructure.Roles.Persistance;
 using RdC.Infrastructure.Security;
+using RdC.Infrastructure.Users.Persistance;
 
 namespace RdC.Infrastructure
 {
@@ -49,6 +50,7 @@ namespace RdC.Infrastructure
             services.AddScoped<IPermissionDefinitionRepository, PermissionDefinitionRepository>();
             services.AddScoped<IRoleRepository, RoleRepository>();
             services.AddScoped<IRolePermissionRepository, RolePermissionRepository>();
+            services.AddScoped<IUserRepository, UserRepository>();
 
             services.AddTransient<IEmailService, EmailService>();
             services.AddTransient<IPdfGeneratorService, PdfGeneratorService>();

@@ -42,7 +42,7 @@ namespace RdC.Infrastructure.Common.Seed
             if (!context.Users.Any())
             {
                 var adminUsername = "admin";
-                var adminEmail = "moataz.achour01@gmail.com";
+                var adminEmail = "moataz01@gmail.com";
                 var hashedPassword = BCrypt.Net.BCrypt.HashPassword("admin");
 
                 var user = User.CreateAdminUser(

@@ -1,0 +1,94 @@
+﻿using MediatR;
+using Microsoft.AspNetCore.Mvc;
+using RdC.Application.Users.Commands.CreateUser;
+using RdC.Application.Users.Queries.GetUser;
+using RdC.Application.Users.Queries.GetUsers;
+using RdC.Domain.DTO.User;
+
+namespace RdC.Api.Controllers.Users
+{
+    [Route("api/[controller]")]
+    [ApiController]
+    public class UsersController : ControllerBase
+    {
+        private readonly ISender _mediator;
+
+        public UsersController(ISender mediator)
+        {
+            _mediator = mediator;
+        }
+
+        [HttpPost]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status409Conflict)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> AddUser(
+            [FromBody] AddUserRequest request)
+        {
+            var command = new CreateUserCommand(
+                request.email,
+                request.roleID);
+
+            try
+            {
+                int userID = await _mediator.Send(command);
+
+                if (userID == -1)
+                {
+                    return Conflict("Email already exist!");
+                }
+
+                return Ok(userID);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
+        [HttpGet("{id:int}")]
+        [ProducesResponseType(typeof(UserResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> GetUserByID([FromRoute] int id)
+        {
+            var query = new GetUserQuery(id);
+
+            try
+            {
+                var userResponse = await _mediator.Send(query);
+
+                if (userResponse is not null)
+                {
+                    return Ok(userResponse);
+                }
+
+                return NotFound($"User with ID {id} is not found!");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
+        [HttpGet("All")]
+        [ProducesResponseType(typeof(List<UserResponse>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> GetAllUsers()
+        {
+            var query = new GetUsersQuery();
+
+            try
+            {
+                var userList = await _mediator.Send(query);
+
+                return Ok(userList);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+    }
+}

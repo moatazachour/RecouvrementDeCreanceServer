@@ -1,6 +1,5 @@
 ﻿using RdC.Domain.Abstrations;
 using RdC.Domain.PlanDePaiements;
-using System.ComponentModel.DataAnnotations;
 
 namespace RdC.Domain.Users
 {
@@ -8,9 +7,9 @@ namespace RdC.Domain.Users
     {
         private User(
             int id,
-            string username,
+            string? username,
             string email,
-            string passwordHash,
+            string? passwordHash,
             UserStatus userStatus,
             int roleID,
             DateTime createdAt)
@@ -54,7 +53,23 @@ namespace RdC.Domain.Users
             return user;
         }
 
+        public static User Create(
+            string email,
+            int roleID)
+        {
+            var user = new User(
+                id: 0,
+                username: null,
+                email: email,
+                passwordHash: null,
+                userStatus: UserStatus.EN_ATTENTE,
+                roleID: roleID,
+                createdAt: DateTime.Now);
+
+            return user;
+        }
+
         private User() { }
-        
+
     }
 }
