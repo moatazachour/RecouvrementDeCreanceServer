@@ -9,6 +9,8 @@ namespace RdC.Application.Common.Interfaces
         Task<User?> GetByIdAsync(int userID);
 
         Task<User?> GetByEmailAsync(string email);
+        
+        Task<User?> GetByIdentifier(string identifier);
 
         Task<List<User>> GetAllAsync();
 

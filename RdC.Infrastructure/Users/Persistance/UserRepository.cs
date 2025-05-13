@@ -44,6 +44,17 @@ namespace RdC.Infrastructure.Users.Persistance
                 .FirstOrDefaultAsync(u => u.Id == userID);
         }
 
+        public async Task<User?> GetByIdentifier(string identifier)
+        {
+            return await _dbContext.Users
+                .Include(u => u.Role)
+                .ThenInclude(r => r.RolePermissions)
+                .ThenInclude(r => r.PermissionDefinition)
+                .FirstOrDefaultAsync(user => 
+                                        user.Username == identifier ||
+                                        user.Email == identifier);
+        }
+
         public async Task<bool> IsEmailExistAsync(string email)
         {
             return await _dbContext.Users.AnyAsync(u => u.Email.ToLower() == email.ToLower());
