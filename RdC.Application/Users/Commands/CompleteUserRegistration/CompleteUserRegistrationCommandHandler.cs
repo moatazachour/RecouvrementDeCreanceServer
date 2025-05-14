@@ -3,11 +3,12 @@ using MediatR.Wrappers;
 using RdC.Application.Common.Dispatcher;
 using RdC.Application.Common.Interfaces;
 using RdC.Application.Common.Security;
+using RdC.Domain.Abstrations;
 
 namespace RdC.Application.Users.Commands.CompleteUserRegistration
 {
     internal sealed class CompleteUserRegistrationCommandHandler
-        : IRequestHandler<CompleteUserRegistrationCommand, bool>
+        : IRequestHandler<CompleteUserRegistrationCommand, Result<bool>>
     {
         private readonly IUserRepository _userRepository;
         private readonly IPasswordHasher _passwordHasher;
@@ -26,7 +27,7 @@ namespace RdC.Application.Users.Commands.CompleteUserRegistration
             _domainEventDispatcher = domainEventDispatcher;
         }
 
-        public async Task<bool> Handle(CompleteUserRegistrationCommand request, CancellationToken cancellationToken)
+        public async Task<Result<bool>> Handle(CompleteUserRegistrationCommand request, CancellationToken cancellationToken)
         {
             var user = await _userRepository.GetByEmailAsync(request.userEmail);
 
@@ -35,9 +36,14 @@ namespace RdC.Application.Users.Commands.CompleteUserRegistration
                 throw new ArgumentNullException(nameof(user));
             }
 
+            if (user.Status != Domain.Users.UserStatus.EN_ATTENTE)
+            {
+                return Result<bool>.Failure("Account already registred.");
+            }
+
             if (await _userRepository.IsUsernameExistAsync(request.username))
             {
-                return false;
+                return Result<bool>.Failure("Username exist in the system.");
             }
 
             string hashedPassword = _passwordHasher.Hash(request.password);
@@ -51,7 +57,7 @@ namespace RdC.Application.Users.Commands.CompleteUserRegistration
 
             await _domainEventDispatcher.DispatchEventsAsync(user);
 
-            return true;
+            return Result<bool>.SuccessResult(true);
         }
     }
 }

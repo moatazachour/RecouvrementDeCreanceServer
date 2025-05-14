@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using RdC.Domain.Abstrations;
 
 namespace RdC.Application.Users.Commands.CompleteUserRegistration
 {
@@ -6,5 +7,5 @@ namespace RdC.Application.Users.Commands.CompleteUserRegistration
         string userEmail,
         string username,
         string password)
-        : IRequest<bool>;
+        : IRequest<Result<bool>>;
 }

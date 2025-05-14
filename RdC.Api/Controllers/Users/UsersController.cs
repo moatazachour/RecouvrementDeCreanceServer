@@ -98,6 +98,7 @@ namespace RdC.Api.Controllers.Users
 
         [HttpPut("CompleteRegistration")]
         [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(bool), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> CompleteRegistration(
             [FromBody] CompleteRegistrationRequest request)
@@ -109,9 +110,14 @@ namespace RdC.Api.Controllers.Users
 
             try
             {
-                bool isRegistred = await _mediator.Send(command);
+                var result = await _mediator.Send(command);
 
-                return Ok(isRegistred);
+                if (!result.Success)
+                {
+                    return BadRequest(new { error = result.Message });
+                }
+
+                return Ok(result.Data);
             }
             catch (Exception ex)
             {
