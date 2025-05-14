@@ -97,8 +97,7 @@ namespace RdC.Api.Controllers.Users
 
 
         [HttpPut("CompleteRegistration")]
-        [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(bool), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> CompleteRegistration(
             [FromBody] CompleteRegistrationRequest request)
@@ -114,10 +113,10 @@ namespace RdC.Api.Controllers.Users
 
                 if (!result.Success)
                 {
-                    return BadRequest(new { error = result.Message });
+                    return Ok(new { success = false, error = result.Message });
                 }
 
-                return Ok(result.Data);
+                return Ok(new { success = true, data = result.Data });
             }
             catch (Exception ex)
             {
