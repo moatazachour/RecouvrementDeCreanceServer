@@ -24,6 +24,7 @@ namespace RdC.Infrastructure.Roles.Persistance
         public async Task<List<Role>> GetAllAsync()
         {
             return await _dbContext.Roles
+                .Include(r => r.Users)
                 .Include(r => r.RolePermissions)
                 .ThenInclude(rp => rp.PermissionDefinition)
                 .ToListAsync();
@@ -32,6 +33,7 @@ namespace RdC.Infrastructure.Roles.Persistance
         public async Task<Role?> GetByIdAsync(int roleID)
         {
             return await _dbContext.Roles
+                .Include(r => r.Users)
                 .Include(r => r.RolePermissions)
                 .ThenInclude(rp => rp.PermissionDefinition)
                 .FirstOrDefaultAsync(r => r.Id == roleID);

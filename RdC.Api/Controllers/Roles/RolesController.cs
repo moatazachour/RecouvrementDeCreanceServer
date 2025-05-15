@@ -39,7 +39,7 @@ namespace RdC.Api.Controllers.Roles
         }
 
         [HttpGet("{id:int}")]
-        [ProducesResponseType(typeof(RoleResponse) ,StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(RoleResponseWithUsers) ,StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetRoleByID([FromRoute] int id)
         {
@@ -59,7 +59,7 @@ namespace RdC.Api.Controllers.Roles
 
 
         [HttpGet("All")]
-        [ProducesResponseType(typeof(List<RoleResponse>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(List<RoleResponseWithUsers>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetRoles()
         {

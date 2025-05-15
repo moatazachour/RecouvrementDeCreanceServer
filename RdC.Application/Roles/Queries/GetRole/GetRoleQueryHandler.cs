@@ -1,11 +1,12 @@
 ﻿using MediatR;
 using RdC.Application.Common.Interfaces;
 using RdC.Domain.DTO.Role;
+using RdC.Domain.DTO.User;
 
 namespace RdC.Application.Roles.Queries.GetRole
 {
     internal sealed class GetRoleQueryHandler
-        : IRequestHandler<GetRoleQuery, RoleResponse?>
+        : IRequestHandler<GetRoleQuery, RoleResponseWithUsers?>
     {
         private readonly IRoleRepository _roleRepository;
 
@@ -14,7 +15,7 @@ namespace RdC.Application.Roles.Queries.GetRole
             _roleRepository = roleRepository;
         }
 
-        public async Task<RoleResponse?> Handle(GetRoleQuery request, CancellationToken cancellationToken)
+        public async Task<RoleResponseWithUsers?> Handle(GetRoleQuery request, CancellationToken cancellationToken)
         {
             var role = await _roleRepository.GetByIdAsync(request.roleID);
 
@@ -33,10 +34,16 @@ namespace RdC.Application.Roles.Queries.GetRole
                 rp.CanCreate)).ToList();
 
 
-            var roleResponse = new RoleResponse(
-                                        role.Id, 
-                                        role.RoleName, 
-                                        rolePermissionsResponse);
+            var roleResponse = new RoleResponseWithUsers(
+                                        role.Id,
+                                        role.RoleName,
+                                        rolePermissionsResponse,
+                                        role.Users.Select(user => new UserBasicResponse(
+                                            user.Id,
+                                            user.Username,
+                                            user.Email,
+                                            user.Status,
+                                            user.CreatedAt)).ToList());
 
             return roleResponse;
         }
