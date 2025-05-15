@@ -48,7 +48,7 @@ namespace RdC.Application.Users.DomainEventHandlers
             sb.AppendLine("Un compte a été créé pour vous sur notre plateforme de gestion.");
             sb.AppendLine("Pour activer votre compte, veuillez finaliser votre inscription en cliquant sur le lien ci-dessous :");
             sb.AppendLine();
-            sb.AppendLine("[LIEN POUR TERMINER L’INSCRIPTION]");
+            sb.AppendLine($"http://localhost:3000/activate?email={user.Email}");
             sb.AppendLine();
             sb.AppendLine("Cordialement,");
             sb.AppendLine("Votre équipe de gestion");
