@@ -48,7 +48,8 @@ namespace RdC.Infrastructure.Litiges.Persistance
 
             builder.HasOne(l => l.User)
                 .WithMany(u => u.litiges)
-                .HasForeignKey(l => l.DeclaredByUserID);
+                .HasForeignKey(l => l.DeclaredByUserID)
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

@@ -3,5 +3,5 @@
     public record CreatePaiementRequest(
         int PaiementDateID,
         decimal MontantPayee,
-        DateTime DateDePaiement);
+        int PaidByUserID);
 }

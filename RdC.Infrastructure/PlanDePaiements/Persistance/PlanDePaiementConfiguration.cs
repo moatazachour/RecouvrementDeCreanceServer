@@ -48,7 +48,8 @@ namespace RdC.Infrastructure.PlanDePaiements.Persistance
 
             builder.HasOne(p => p.User)
                 .WithMany(u => u.planDePaiements)
-                .HasForeignKey(p => p.CreatedByUserID);
+                .HasForeignKey(p => p.CreatedByUserID)
+                .OnDelete(DeleteBehavior.Restrict);
 
             builder.HasMany(plan => plan.Factures)
                 .WithMany(facture => facture.PlanDePaiements)

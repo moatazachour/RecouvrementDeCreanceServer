@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RdC.Infrastructure.Common.Persistance;
 
@@ -11,9 +12,11 @@ using RdC.Infrastructure.Common.Persistance;
 namespace RdC.Infrastructure.Migrations
 {
     [DbContext(typeof(RecouvrementDBContext))]
-    partial class RecouvrementDBContextModelSnapshot : ModelSnapshot
+    [Migration("20250515191534_ChangeDeletionTypeOnPlanDePaiementUser")]
+    partial class ChangeDeletionTypeOnPlanDePaiementUser
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -264,15 +267,10 @@ namespace RdC.Infrastructure.Migrations
                     b.Property<decimal>("MontantPayee")
                         .HasColumnType("decimal(18, 3)");
 
-                    b.Property<int>("PaidByUserID")
-                        .HasColumnType("int");
-
                     b.Property<int>("PaiementDateID")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("PaidByUserID");
 
                     b.HasIndex("PaiementDateID");
 
@@ -600,12 +598,6 @@ namespace RdC.Infrastructure.Migrations
 
             modelBuilder.Entity("RdC.Domain.Paiements.Paiement", b =>
                 {
-                    b.HasOne("RdC.Domain.Users.User", "User")
-                        .WithMany("paiements")
-                        .HasForeignKey("PaidByUserID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
                     b.HasOne("RdC.Domain.PaiementDates.PaiementDate", "PaiementDate")
                         .WithMany("Paiements")
                         .HasForeignKey("PaiementDateID")
@@ -613,8 +605,6 @@ namespace RdC.Infrastructure.Migrations
                         .IsRequired();
 
                     b.Navigation("PaiementDate");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("RdC.Domain.PlanDePaiements.PlanDePaiement", b =>
@@ -729,8 +719,6 @@ namespace RdC.Infrastructure.Migrations
             modelBuilder.Entity("RdC.Domain.Users.User", b =>
                 {
                     b.Navigation("litiges");
-
-                    b.Navigation("paiements");
 
                     b.Navigation("planDePaiements");
                 });
