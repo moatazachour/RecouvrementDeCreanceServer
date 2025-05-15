@@ -43,6 +43,9 @@ namespace RdC.Infrastructure.PlanDePaiements.Persistance
                 .HasColumnType("BIT")
                 .IsRequired();
 
+            builder.Property(p => p.ValidationDate)
+                .HasColumnType("DATETIME");
+
             builder.HasOne(p => p.User)
                 .WithMany(u => u.planDePaiements)
                 .HasForeignKey(p => p.CreatedByUserID);

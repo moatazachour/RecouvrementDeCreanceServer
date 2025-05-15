@@ -46,6 +46,9 @@ namespace RdC.Domain.PlanDePaiements
         public bool HasAdvance {  get; set; }
 
         public int CreatedByUserID { get; set; }
+        public int? ValidatedByUserID { get; set; }
+        public DateTime? ValidationDate { get; set; }
+
         public User User { get; set; }
 
         public static PlanDePaiement Create(
@@ -78,9 +81,13 @@ namespace RdC.Domain.PlanDePaiements
             return this;
         }
 
-        public PlanDePaiement Activate()
+        public PlanDePaiement Activate(int validatedByUserID)
         {
             PlanStatus = PlanStatus.EN_COURS;
+
+            ValidatedByUserID = validatedByUserID;
+            
+            ValidationDate = DateTime.Now;
 
             RaiseDomainEvent(new ActivatePlanDomainEvent(this));
 

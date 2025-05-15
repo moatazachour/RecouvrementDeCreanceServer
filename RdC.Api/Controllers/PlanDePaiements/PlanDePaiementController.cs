@@ -121,20 +121,23 @@ namespace RdC.Api.Controllers.PlanDePaiements
             }
         }
 
-        [HttpPut("Activate/{id:int}")]
+        [HttpPut("Activate")]
         [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> Activate([FromRoute] int id)
+        public async Task<IActionResult> Activate(
+            [FromBody] ActivatePlanDePaiementRequest request)
         {
-            var command = new ActivatePlanCommand(id);
+            var command = new ActivatePlanCommand(
+                request.planID,
+                request.activatedByUserID);
 
             try
             {
                 var isActivated = await _mediator.Send(command);
 
                 if (!isActivated)
-                    return NotFound($"Plan with ID {id} not found.");
+                    return NotFound($"Plan with ID {request.planID} not found.");
 
                 return Ok(isActivated);
             }
