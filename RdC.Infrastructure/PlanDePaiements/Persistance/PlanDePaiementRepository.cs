@@ -34,6 +34,20 @@ namespace RdC.Infrastructure.PlanDePaiements.Persistance
                 .ToListAsync();
         }
 
+        public Task<List<PlanDePaiement>> GetAllCreatedByUserIdAsync(int userID)
+        {
+            return _dbContext.PlanDePaiements
+                .Where(pp => pp.CreatedByUserID == userID)
+                .ToListAsync();
+        }
+
+        public Task<List<PlanDePaiement>> GetAllValidatedByUserId(int userID)
+        {
+            return _dbContext.PlanDePaiements
+                .Where(pp => pp.ValidatedByUserID == userID)
+                .ToListAsync();
+        }
+
         public async Task<PlanDePaiement?> GetByIdAsync(int PlanID)
         {
             return await _dbContext.PlanDePaiements

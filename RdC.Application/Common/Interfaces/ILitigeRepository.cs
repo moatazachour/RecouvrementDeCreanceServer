@@ -8,6 +8,10 @@ namespace RdC.Application.Common.Interfaces
 
         Task<Litige?> GetByIdAsync(int litigeID);
 
+        Task<List<Litige>> GetAllDeclaredByUserIdAsync(int userId);
+
+        Task<List<Litige>> GetAllResolutedByUserIdAsync(int userId);
+
         Task<List<Litige>> GetAllAsync();
     }
 }

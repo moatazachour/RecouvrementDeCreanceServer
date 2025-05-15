@@ -4,6 +4,7 @@ using RdC.Application.Users.Commands.CompleteUserRegistration;
 using RdC.Application.Users.Commands.CreateUser;
 using RdC.Application.Users.Commands.Login;
 using RdC.Application.Users.Queries.GetUser;
+using RdC.Application.Users.Queries.GetUserActions;
 using RdC.Application.Users.Queries.GetUsers;
 using RdC.Domain.DTO.User;
 
@@ -88,6 +89,25 @@ namespace RdC.Api.Controllers.Users
                 var userList = await _mediator.Send(query);
 
                 return Ok(userList);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
+        [HttpGet("{id:int}/Actions")]
+        [ProducesResponseType(typeof(List<UserActionsResponse>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> GetAllUserActionsHistory([FromRoute] int id)
+        {
+            var query = new GetUserActionsQuery(id);
+
+            try
+            {
+                var userActionsHistory = await _mediator.Send(query);
+
+                return Ok(userActionsHistory);
             }
             catch (Exception ex)
             {
