@@ -1,4 +1,5 @@
 ﻿using RdC.Domain.Abstrations;
+using RdC.Domain.Litiges;
 using RdC.Domain.PlanDePaiements;
 using RdC.Domain.Users.Events;
 
@@ -35,6 +36,8 @@ namespace RdC.Domain.Users
         public DateTime CreatedAt { get; private set; }
 
         public List<PlanDePaiement> planDePaiements { get; private set; } = new();
+
+        public List<Litige> litiges { get; private set; } = new();
 
         public static User CreateAdminUser(
             string username,

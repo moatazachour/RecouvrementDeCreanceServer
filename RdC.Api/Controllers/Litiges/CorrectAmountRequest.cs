@@ -2,5 +2,6 @@
 {
     public record CorrectAmountRequest(
         decimal correctedMontantTotal,
-        decimal correctedAmountDue);
+        decimal correctedAmountDue,
+        int correctedByUserID);
 }
