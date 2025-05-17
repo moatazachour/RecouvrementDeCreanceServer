@@ -2,10 +2,13 @@
 using Microsoft.AspNetCore.Mvc;
 using RdC.Application.Users.Commands.CompleteUserRegistration;
 using RdC.Application.Users.Commands.CreateUser;
+using RdC.Application.Users.Commands.DesactivateUser;
 using RdC.Application.Users.Commands.Login;
+using RdC.Application.Users.Commands.ReactivateUser;
 using RdC.Application.Users.Queries.GetUser;
 using RdC.Application.Users.Queries.GetUserActions;
 using RdC.Application.Users.Queries.GetUsers;
+using RdC.Domain.Abstrations;
 using RdC.Domain.DTO.User;
 
 namespace RdC.Api.Controllers.Users
@@ -178,6 +181,55 @@ namespace RdC.Api.Controllers.Users
                 }
 
                 return Ok(result.Data);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
+
+        [HttpPut("Desactivate/{id:int}")]
+        [ProducesResponseType(typeof(Result<bool>), StatusCodes.Status200OK)]
+        public async Task<IActionResult> DesactivateUser(
+            [FromRoute] int id)
+        {
+            var command = new DesactivateUserCommand(id);
+
+            try
+            {
+                var result = await _mediator.Send(command);
+
+                if (!result.Success)
+                {
+                    return Ok(new { success = false, error = result.Message });
+                }
+
+                return Ok(new { success = true, data = result.Data });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
+        [HttpPut("Reactivate/{id:int}")]
+        [ProducesResponseType(typeof(Result<bool>), StatusCodes.Status200OK)]
+        public async Task<IActionResult> ReactivateUser(
+            [FromRoute] int id)
+        {
+            var command = new ReactivateUserCommand(id);
+
+            try
+            {
+                var result = await _mediator.Send(command);
+
+                if (!result.Success)
+                {
+                    return Ok(new { success = false, error = result.Message });
+                }
+
+                return Ok(new { success = true, data = result.Data });
             }
             catch (Exception ex)
             {

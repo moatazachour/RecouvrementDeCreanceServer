@@ -88,6 +88,16 @@ namespace RdC.Domain.Users
             RaiseDomainEvent(new ContinueRegistrationDomainEvent(Id));
         }
 
+        public void Desactivate()
+        {
+            Status = UserStatus.INACTIVE;
+        }
+
+        public void Reactivate()
+        {
+            Status = UserStatus.ACTIVE;
+        }
+
         private User() { }
 
     }
