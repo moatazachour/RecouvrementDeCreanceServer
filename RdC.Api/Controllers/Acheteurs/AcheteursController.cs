@@ -39,6 +39,7 @@ namespace RdC.Api.Controllers.Acheteurs
                                 acheteur.Adresse,
                                 acheteur.Email,
                                 acheteur.Telephone,
+                                acheteur.Score,
                                 acheteur.Factures.Select(facture => new FactureResponse(
                                                             facture.Id,
                                                             facture.NumFacture,
@@ -103,6 +104,7 @@ namespace RdC.Api.Controllers.Acheteurs
                     acheteur.Adresse,
                     acheteur.Email,
                     acheteur.Telephone,
+                    acheteur.Score,
                     acheteur.Factures.Select(facture => new FactureResponse(
                                                             facture.Id,
                                                             facture.NumFacture,

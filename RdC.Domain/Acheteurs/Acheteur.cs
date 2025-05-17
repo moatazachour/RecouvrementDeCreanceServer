@@ -11,12 +11,20 @@ namespace RdC.Domain.Acheteurs
         public string? Adresse { get; private set; }
         public string Email { get; private set; }
         public string Telephone { get; private set; }
+        public float Score { get; private set; }
 
         [JsonIgnore]
         public ICollection<Facture> Factures { get; private set; }
 
 
-        public Acheteur(int Id, string nom, string prenom, string? adresse, string email, string telephone)
+        public Acheteur(
+            int Id, 
+            string nom, 
+            string prenom, 
+            string? adresse, 
+            string email, 
+            string telephone, 
+            float score)
             : base(Id)
         {
             Nom = nom;
@@ -25,6 +33,7 @@ namespace RdC.Domain.Acheteurs
             Email = email;
             Telephone = telephone;
             Factures = new List<Facture>();
+            Score = score;
         }
 
         private Acheteur() { }

@@ -38,7 +38,7 @@ namespace RdC.Application.Litiges.Commands.RejectLitige
                 return false;
             }
 
-            facture.GetFactureStatus();
+            facture.CheckFactureStatus();
 
             await _unitOfWork.CommitChangesAsync();
 
