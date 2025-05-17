@@ -66,7 +66,7 @@ namespace RdC.Application.Paiements.Commands.CreatePaiement
             var paiement = Paiement.CreatePaiement(
                 paiementDate.Id,
                 montantPayee,
-                DateTime.Now);
+                request.createPaiementRequest.PaidByUserID);
 
             await _paiementRepository.AddAsync(paiement);
 

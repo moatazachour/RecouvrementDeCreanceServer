@@ -1,5 +1,6 @@
 using RdC.Application;
 using RdC.Infrastructure;
+using RdC.Infrastructure.Common.Persistance;
 using RdC.WorkerService;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -40,5 +41,12 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+
+// Seed administrator role with all permissions
+using (var scope = app.Services.CreateScope())
+{
+    var context = scope.ServiceProvider.GetRequiredService<RecouvrementDBContext>();
+    await RdC.Infrastructure.Common.Seed.DbInitializer.SeedAdministratorRoleAndUserAsync(context);
+}
 
 app.Run();

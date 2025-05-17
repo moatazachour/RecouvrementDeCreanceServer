@@ -30,7 +30,7 @@ namespace RdC.Application.PlanDePaiements.Commands.ActivatePlan
                 return false;
             }
 
-            plan.Activate();
+            plan.Activate(request.ValidatedByUserID);
 
             await _unitOfWork.CommitChangesAsync();
 

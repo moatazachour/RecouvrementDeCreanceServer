@@ -30,6 +30,24 @@ namespace RdC.Infrastructure.Litiges.Persistance
                 .ToListAsync();
         }
 
+        public Task<List<Litige>> GetAllDeclaredByUserIdAsync(int userId)
+        {
+            return _dbContext.Litiges
+                .Include(l => l.Facture)
+                .Include (l => l.LitigeType)
+                .Where(l => l.DeclaredByUserID == userId)
+                .ToListAsync();
+        }
+
+        public Task<List<Litige>> GetAllResolutedByUserIdAsync(int userId)
+        {
+            return _dbContext.Litiges
+                .Include(l => l.Facture)
+                .Include(l => l.LitigeType)
+                .Where(l => l.ResolutedByUserID == userId)
+                .ToListAsync();
+        }
+
         public Task<Litige?> GetByIdAsync(int litigeID)
         {
             return _dbContext.Litiges
