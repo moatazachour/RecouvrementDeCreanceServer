@@ -8,6 +8,10 @@ namespace RdC.Application.Common.Interfaces
 
         Task<List<PlanDePaiement>> GetAllAsync();
 
+        Task<List<PlanDePaiement>> GetAllCreatedByUserIdAsync(int  userID);
+
+        Task<List<PlanDePaiement>> GetAllValidatedByUserId(int  userID);
+
         Task<PlanDePaiement?> GetByIdAsync(int PlanID);
     }
 }

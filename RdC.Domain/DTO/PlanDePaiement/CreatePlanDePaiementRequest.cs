@@ -6,5 +6,6 @@ namespace RdC.Domain.DTO.PlanDePaiement
         decimal MontantTotal, 
         byte NombreDeEcheances, 
         List<int> FactureIDs,
-        bool HasAdvance);
+        bool HasAdvance,
+        int CreatedByUserID);
 }

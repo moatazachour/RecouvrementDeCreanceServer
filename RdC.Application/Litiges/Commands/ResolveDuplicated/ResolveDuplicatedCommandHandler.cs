@@ -45,13 +45,13 @@ namespace RdC.Application.Litiges.Commands.ResolveDuplicated
             {
                 currentFacture.Status = FactureStatus.DUPLIQUE;
 
-                litige.Accept();
+                litige.Accept(request.ResolutedByUserID);
 
                 isAccepted = true;
             }
             else
             {
-                litige.Reject();
+                litige.Reject(request.ResolutedByUserID);
 
                 currentFacture.CheckFactureStatus();
 

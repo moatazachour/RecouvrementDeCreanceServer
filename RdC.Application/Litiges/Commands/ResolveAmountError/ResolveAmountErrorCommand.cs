@@ -5,6 +5,7 @@ namespace RdC.Application.Litiges.Commands.ResolveAmountError
     public record ResolveAmountErrorCommand(
         int LitigeID,
         decimal CorrectedTotalAmount,
-        decimal CorrectedAmountDue) 
+        decimal CorrectedAmountDue,
+        int ResolutedByUserID) 
         : IRequest<bool>;
 }

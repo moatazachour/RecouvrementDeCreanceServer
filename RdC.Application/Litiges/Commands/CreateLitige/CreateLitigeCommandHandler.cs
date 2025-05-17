@@ -27,7 +27,8 @@ namespace RdC.Application.Litiges.Commands.CreateLitige
             var litige = Litige.Declare(
                 request.createLitigeRequest.FactureID,
                 request.createLitigeRequest.TypeID,
-                request.createLitigeRequest.LitigeDescription);
+                request.createLitigeRequest.LitigeDescription,
+                request.createLitigeRequest.DeclaredByUserID);
 
             var facture = await _factureRepository.GetByIdAsync(litige.FactureID);
 

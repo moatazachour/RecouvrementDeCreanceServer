@@ -24,6 +24,11 @@ namespace RdC.Infrastructure.Paiements.Persistance
             builder.HasOne(p => p.PaiementDate)
                 .WithMany(pd => pd.Paiements)
                 .HasForeignKey(p => p.PaiementDateID);
+
+            builder.HasOne(p => p.User)
+                .WithMany(u => u.paiements)
+                .HasForeignKey(p => p.PaidByUserID)
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

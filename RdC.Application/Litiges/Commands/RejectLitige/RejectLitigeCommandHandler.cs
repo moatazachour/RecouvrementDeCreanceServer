@@ -29,7 +29,7 @@ namespace RdC.Application.Litiges.Commands.RejectLitige
                 return false;
             }
 
-            litige.Reject();
+            litige.Reject(request.ResolutedByUserID);
 
             var facture = await _factureRepository.GetByIdAsync(litige.FactureID);
 

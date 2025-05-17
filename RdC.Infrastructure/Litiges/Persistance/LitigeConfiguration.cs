@@ -45,6 +45,11 @@ namespace RdC.Infrastructure.Litiges.Persistance
 
             builder.Property(l => l.ResolutionDate)
                 .HasColumnType("DATETIME");
+
+            builder.HasOne(l => l.User)
+                .WithMany(u => u.litiges)
+                .HasForeignKey(l => l.DeclaredByUserID)
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

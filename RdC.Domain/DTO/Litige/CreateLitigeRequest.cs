@@ -3,5 +3,6 @@
     public record CreateLitigeRequest(
         int FactureID,
         int TypeID,
-        string LitigeDescription);
+        string LitigeDescription,
+        int DeclaredByUserID);
 }

@@ -4,7 +4,7 @@ using System.Text.Json.Serialization;
 
 namespace RdC.Domain.Acheteurs
 {
-    public class Acheteur : Entity
+    public sealed class Acheteur : Entity
     {
         public string Nom { get; private set; }
         public string Prenom { get; private set; }

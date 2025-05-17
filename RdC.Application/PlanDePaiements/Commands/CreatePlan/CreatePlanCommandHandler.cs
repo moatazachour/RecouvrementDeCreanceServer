@@ -32,7 +32,8 @@ namespace RdC.Application.PlanDePaiements.Commands.CreatePlan
                 request.createPlanDePaiementRequest.MontantTotal,
                 request.createPlanDePaiementRequest.NombreDeEcheances,
                 DateTime.Now,
-                request.createPlanDePaiementRequest.HasAdvance);
+                request.createPlanDePaiementRequest.HasAdvance,
+                request.createPlanDePaiementRequest.CreatedByUserID);
 
             plan.AddFactures(factures);
 

@@ -120,6 +120,9 @@ namespace RdC.Infrastructure.Migrations
                     b.Property<DateTime>("CreationDate")
                         .HasColumnType("DATETIME");
 
+                    b.Property<int>("DeclaredByUserID")
+                        .HasColumnType("int");
+
                     b.Property<int>("FactureID")
                         .HasColumnType("int")
                         .HasColumnName("FactureID");
@@ -137,10 +140,15 @@ namespace RdC.Infrastructure.Migrations
                         .HasColumnType("int")
                         .HasColumnName("TypeID");
 
+                    b.Property<int?>("ResolutedByUserID")
+                        .HasColumnType("int");
+
                     b.Property<DateTime?>("ResolutionDate")
                         .HasColumnType("DATETIME");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("DeclaredByUserID");
 
                     b.HasIndex("FactureID");
 
@@ -259,10 +267,15 @@ namespace RdC.Infrastructure.Migrations
                     b.Property<decimal>("MontantPayee")
                         .HasColumnType("decimal(18, 3)");
 
+                    b.Property<int>("PaidByUserID")
+                        .HasColumnType("int");
+
                     b.Property<int>("PaiementDateID")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("PaidByUserID");
 
                     b.HasIndex("PaiementDateID");
 
@@ -277,6 +290,9 @@ namespace RdC.Infrastructure.Migrations
                         .HasColumnName("PlanID");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CreatedByUserID")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("CreationDate")
                         .HasColumnType("DATETIME");
@@ -299,7 +315,15 @@ namespace RdC.Infrastructure.Migrations
                     b.Property<byte>("PlanStatus")
                         .HasColumnType("TINYINT");
 
+                    b.Property<int?>("ValidatedByUserID")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("ValidationDate")
+                        .HasColumnType("DATETIME");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("CreatedByUserID");
 
                     b.ToTable("PlanDePaiements");
                 });
@@ -332,6 +356,140 @@ namespace RdC.Infrastructure.Migrations
                     b.ToTable("Relances", (string)null);
 
                     b.UseTptMappingStrategy();
+                });
+
+            modelBuilder.Entity("RdC.Domain.Users.PermissionDefinition", b =>
+                {
+                    b.Property<int>("Id")
+                        .HasColumnType("int")
+                        .HasColumnName("PermissionDefinitionID");
+
+                    b.Property<string>("PermissionName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("PermissionName");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("PermissionDefinitions");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            PermissionName = "Gestion des utilisateurs"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            PermissionName = "Gestion des roles"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            PermissionName = "Gestion des données de créances (Acheteurs/Factures)"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            PermissionName = "Gestion des litiges"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            PermissionName = "Gestion des plan de paiements"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            PermissionName = "Gestion des paiements"
+                        });
+                });
+
+            modelBuilder.Entity("RdC.Domain.Users.Role", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnName("RoleID");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("RoleName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("RoleName");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Roles");
+                });
+
+            modelBuilder.Entity("RdC.Domain.Users.RolePermission", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<bool>("CanCreate")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("CanRead")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("CanWrite")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("PermissionDefinitionID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("RoleID")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PermissionDefinitionID");
+
+                    b.HasIndex("RoleID");
+
+                    b.ToTable("RolePermissions");
+                });
+
+            modelBuilder.Entity("RdC.Domain.Users.User", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnName("UserID");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("DATETIME");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PasswordHash")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("RoleID")
+                        .HasColumnType("int");
+
+                    b.Property<byte>("Status")
+                        .HasColumnType("TINYINT");
+
+                    b.Property<string>("Username")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RoleID");
+
+                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("RdC.Domain.Relances.EmailRelance", b =>
@@ -396,6 +554,12 @@ namespace RdC.Infrastructure.Migrations
 
             modelBuilder.Entity("RdC.Domain.Litiges.Litige", b =>
                 {
+                    b.HasOne("RdC.Domain.Users.User", "User")
+                        .WithMany("litiges")
+                        .HasForeignKey("DeclaredByUserID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.HasOne("RdC.Domain.Factures.Facture", "Facture")
                         .WithMany("Litiges")
                         .HasForeignKey("FactureID")
@@ -411,6 +575,8 @@ namespace RdC.Infrastructure.Migrations
                     b.Navigation("Facture");
 
                     b.Navigation("LitigeType");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("RdC.Domain.Litiges.LitigeJustificatif", b =>
@@ -437,6 +603,12 @@ namespace RdC.Infrastructure.Migrations
 
             modelBuilder.Entity("RdC.Domain.Paiements.Paiement", b =>
                 {
+                    b.HasOne("RdC.Domain.Users.User", "User")
+                        .WithMany("paiements")
+                        .HasForeignKey("PaidByUserID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.HasOne("RdC.Domain.PaiementDates.PaiementDate", "PaiementDate")
                         .WithMany("Paiements")
                         .HasForeignKey("PaiementDateID")
@@ -444,6 +616,19 @@ namespace RdC.Infrastructure.Migrations
                         .IsRequired();
 
                     b.Navigation("PaiementDate");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("RdC.Domain.PlanDePaiements.PlanDePaiement", b =>
+                {
+                    b.HasOne("RdC.Domain.Users.User", "User")
+                        .WithMany("planDePaiements")
+                        .HasForeignKey("CreatedByUserID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("RdC.Domain.Relances.Relance", b =>
@@ -455,6 +640,36 @@ namespace RdC.Infrastructure.Migrations
                         .IsRequired();
 
                     b.Navigation("PaiementDate");
+                });
+
+            modelBuilder.Entity("RdC.Domain.Users.RolePermission", b =>
+                {
+                    b.HasOne("RdC.Domain.Users.PermissionDefinition", "PermissionDefinition")
+                        .WithMany()
+                        .HasForeignKey("PermissionDefinitionID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("RdC.Domain.Users.Role", "Role")
+                        .WithMany("RolePermissions")
+                        .HasForeignKey("RoleID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("PermissionDefinition");
+
+                    b.Navigation("Role");
+                });
+
+            modelBuilder.Entity("RdC.Domain.Users.User", b =>
+                {
+                    b.HasOne("RdC.Domain.Users.Role", "Role")
+                        .WithMany("Users")
+                        .HasForeignKey("RoleID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Role");
                 });
 
             modelBuilder.Entity("RdC.Domain.Relances.EmailRelance", b =>
@@ -505,6 +720,22 @@ namespace RdC.Infrastructure.Migrations
             modelBuilder.Entity("RdC.Domain.PlanDePaiements.PlanDePaiement", b =>
                 {
                     b.Navigation("PaiementsDates");
+                });
+
+            modelBuilder.Entity("RdC.Domain.Users.Role", b =>
+                {
+                    b.Navigation("RolePermissions");
+
+                    b.Navigation("Users");
+                });
+
+            modelBuilder.Entity("RdC.Domain.Users.User", b =>
+                {
+                    b.Navigation("litiges");
+
+                    b.Navigation("paiements");
+
+                    b.Navigation("planDePaiements");
                 });
 #pragma warning restore 612, 618
         }

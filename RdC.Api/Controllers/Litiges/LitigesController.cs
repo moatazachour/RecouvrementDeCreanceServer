@@ -20,7 +20,7 @@ namespace RdC.Api.Controllers.Litiges
         private readonly ILogger<LitigesController> _logger;
 
         public LitigesController(
-            ISender mediator, 
+            ISender mediator,
             ILogger<LitigesController> logger)
         {
             _mediator = mediator;
@@ -118,23 +118,26 @@ namespace RdC.Api.Controllers.Litiges
         }
 
 
-        [HttpPut("RejectLitige/{id:int}")]
+        [HttpPut("RejectLitige")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> RejectLitige([FromRoute] int id)
-        { 
-            var command = new RejectLitigeCommand( LitigeID: id);
+        public async Task<IActionResult> RejectLitige(
+            [FromBody] RejectLitigeRequest request)
+        {
+            var command = new RejectLitigeCommand(
+                request.litigeID,
+                request.rejectedByUserID);
 
             try
             {
                 bool isRejected = await _mediator.Send(command);
 
                 if (isRejected)
-                    return Ok($"Litige with ID {id} is rejected");
-                
+                    return Ok($"Litige with ID {request.litigeID} is rejected");
 
-                return NotFound($"Litige with ID {id} not found!");
+
+                return NotFound($"Litige with ID {request.litigeID} not found!");
             }
             catch (Exception ex)
             {
@@ -152,7 +155,8 @@ namespace RdC.Api.Controllers.Litiges
             var command = new ResolveAmountErrorCommand(
                 LitigeID: id,
                 CorrectedTotalAmount: request.correctedMontantTotal,
-                CorrectedAmountDue: request.correctedAmountDue);
+                CorrectedAmountDue: request.correctedAmountDue,
+                ResolutedByUserID: request.correctedByUserID);
 
             try
             {
@@ -171,19 +175,22 @@ namespace RdC.Api.Controllers.Litiges
         }
 
 
-        [HttpPut("ResolveDuplicated/{id:int}")]
-        public async Task<IActionResult> ResolveDuplicated([FromRoute] int id)
+        [HttpPut("ResolveDuplicated")]
+        public async Task<IActionResult> ResolveDuplicated(
+            [FromBody] ResolveDuplicatedRequest request)
         {
-            var commond = new ResolveDuplicatedCommand(LitigeID: id);
+            var commond = new ResolveDuplicatedCommand(
+                request.litigeID,
+                request.resolvedByUserID);
 
             try
             {
                 bool isResolved = await _mediator.Send(commond);
 
                 if (isResolved)
-                    return Ok($"Litige with ID {id} is resolved");
+                    return Ok($"Litige with ID {request.litigeID} is resolved");
 
-                return Ok($"Litige with ID {id} is rejected");
+                return Ok($"Litige with ID {request.litigeID} is rejected");
             }
             catch (Exception ex)
             {
@@ -198,8 +205,8 @@ namespace RdC.Api.Controllers.Litiges
         {
             var litige = await _mediator.Send(new GetLitigeQuery(id));
 
-            if (litige is null || 
-                litige.LitigeJustificatifs is null || 
+            if (litige is null ||
+                litige.LitigeJustificatifs is null ||
                 !litige.LitigeJustificatifs.Any())
             {
                 return NotFound("No justificatifs found for this litige.");
@@ -224,7 +231,7 @@ namespace RdC.Api.Controllers.Litiges
                 return NotFound("Justificatif not found.");
 
             var fileBytes = await System.IO.File.ReadAllBytesAsync(justificatif.CheminFichier);
-            
+
             return File(fileBytes, "application/octet-stream", justificatif.CheminFichier);
         }
     }
