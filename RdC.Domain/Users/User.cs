@@ -98,6 +98,11 @@ namespace RdC.Domain.Users
             Status = UserStatus.ACTIVE;
         }
 
+        public void ChangeRole(int roleID)
+        {
+            RoleID = roleID;
+        }
+
         private User() { }
 
     }

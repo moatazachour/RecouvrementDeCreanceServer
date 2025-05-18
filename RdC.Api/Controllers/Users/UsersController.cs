@@ -5,6 +5,7 @@ using RdC.Application.Users.Commands.CreateUser;
 using RdC.Application.Users.Commands.DesactivateUser;
 using RdC.Application.Users.Commands.Login;
 using RdC.Application.Users.Commands.ReactivateUser;
+using RdC.Application.Users.Commands.UpdateUserRole;
 using RdC.Application.Users.Queries.GetUser;
 using RdC.Application.Users.Queries.GetUserActions;
 using RdC.Application.Users.Queries.GetUsers;
@@ -213,6 +214,7 @@ namespace RdC.Api.Controllers.Users
             }
         }
 
+
         [HttpPut("Reactivate/{id:int}")]
         [ProducesResponseType(typeof(Result<bool>), StatusCodes.Status200OK)]
         public async Task<IActionResult> ReactivateUser(
@@ -230,6 +232,28 @@ namespace RdC.Api.Controllers.Users
                 }
 
                 return Ok(new { success = true, data = result.Data });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
+
+        [HttpPut("UpdateRole")]
+        [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
+        public async Task<IActionResult> UpdateUserRole(
+            [FromBody] UpdateRoleRequest request)
+        {
+            var command = new UpdateUserRoleCommand(
+                request.userID,
+                request.roleID);
+
+            try
+            {
+                bool isUpdated = await _mediator.Send(command);
+
+                return Ok(isUpdated);
             }
             catch (Exception ex)
             {
