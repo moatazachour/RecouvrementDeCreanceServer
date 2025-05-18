@@ -14,11 +14,13 @@ namespace RdC.Application.PaiementDates.Commands.CheckPreviousPaiement
 
         public CheckPreviousPaiementCommandHandler(
             IPaiementDateRepository paiementDateRepository,
-            IAcheteurRepository plandePaiementRepository,
+            IAcheteurRepository acheteurRepository,
             IPlanDePaiementRepository planDePaiementRepository,
             IUnitOfWork unitOfWork)
         {
             _paiementDateRepository = paiementDateRepository;
+            _plandePaiementRepository = planDePaiementRepository;
+            _acheteurRepository = acheteurRepository;
             _unitOfWork = unitOfWork;
         }
 

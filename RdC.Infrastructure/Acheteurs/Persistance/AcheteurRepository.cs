@@ -78,7 +78,6 @@ namespace RdC.Infrastructure.Acheteurs.Persistance
         {
             return await _dbContext.Acheteurs
                 .Include(a => a.Factures)
-                .AsNoTracking()
                 .FirstOrDefaultAsync(a => a.Id == acheteurID);
         }
     }
