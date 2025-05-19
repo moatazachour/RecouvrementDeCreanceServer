@@ -11,7 +11,7 @@ namespace RdC.Domain.Acheteurs
         public string? Adresse { get; private set; }
         public string Email { get; private set; }
         public string Telephone { get; private set; }
-        public float Score { get; private set; }
+        public float Score { get; set; }
 
         [JsonIgnore]
         public ICollection<Facture> Factures { get; private set; }

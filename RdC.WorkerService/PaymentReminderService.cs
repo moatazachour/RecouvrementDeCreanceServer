@@ -2,13 +2,10 @@ using MediatR;
 using RdC.Application.PaiementDates.Commands.CheckPreviousPaiement;
 using RdC.Application.PaiementDates.Queries.GetPaiementDatesByOffset;
 using RdC.Application.PaiementDates.Queries.GetPreviousPaiementDate;
-using RdC.Application.PaiementDates.Queries.GetTodaysPaiementDates;
 using RdC.Application.PlanDePaiements.Commands.CheckPlanStatus;
 using RdC.Application.Relances.Commands.SendRelance;
 using RdC.Domain.PaiementDates;
 using RdC.Domain.Relances;
-using System.Runtime.InteropServices;
-using System.Threading.Tasks;
 
 namespace RdC.WorkerService
 {
@@ -157,7 +154,7 @@ namespace RdC.WorkerService
             var mediator = scope.ServiceProvider.GetRequiredService<ISender>();
 
             var command = new CheckPreviousPaiementCommand(PaiementDateID);
-            
+
             await mediator.Send(command);
         }
 
