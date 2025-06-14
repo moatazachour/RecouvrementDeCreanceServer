@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using RdC.Application.Common.Interfaces;
+using RdC.Domain.Acheteurs;
 
 namespace RdC.Application.Litiges.Commands.RejectLitige
 {
@@ -8,15 +9,18 @@ namespace RdC.Application.Litiges.Commands.RejectLitige
     {
         private readonly ILitigeRepository _litigeRepository;
         private readonly IFactureRepository _factureRepository;
+        private readonly IAcheteurRepository _acheteurRepository;
         private readonly IUnitOfWork _unitOfWork;
 
         public RejectLitigeCommandHandler(
             ILitigeRepository litigeRepository, 
-            IFactureRepository factureRepository, 
+            IFactureRepository factureRepository,
+            IAcheteurRepository acheteurRepository,
             IUnitOfWork unitOfWork)
         {
             _litigeRepository = litigeRepository;
             _factureRepository = factureRepository;
+            _acheteurRepository = acheteurRepository;
             _unitOfWork = unitOfWork;
         }
 
@@ -37,6 +41,15 @@ namespace RdC.Application.Litiges.Commands.RejectLitige
             {
                 return false;
             }
+
+            var acheteur = await _acheteurRepository.GetByIdAsync(facture.AcheteurID);
+
+            if (acheteur is null)
+            {
+                return false;
+            }
+
+            acheteur.Score -= (float)Penalties.RejectedLitigePenalty;
 
             facture.CheckFactureStatus();
 

@@ -94,12 +94,12 @@ namespace RdC.WorkerService
 
         private async Task OverdueUnpaidPaymentReminder(int days)
         {
-            var futuresUnpaidPaiementDates = await _GetPaiementDatesByOffset((-1) * days);
+            var pastUnpaidPaiementDates = await _GetPaiementDatesByOffset((-1) * days);
 
-            if (futuresUnpaidPaiementDates.Count == 0)
+            if (pastUnpaidPaiementDates.Count == 0)
                 return;
 
-            foreach (var unpaidPaiementDate in futuresUnpaidPaiementDates)
+            foreach (var unpaidPaiementDate in pastUnpaidPaiementDates)
             {
                 await _SendPaiementRemainder(unpaidPaiementDate.Id, RelanceContext.OverduePaymentReminder);
             }

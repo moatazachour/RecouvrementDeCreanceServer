@@ -3,6 +3,7 @@
     public enum Penalties
     {
         MissedPaiementPenalty = 5,
-        PlanCancelationPenalty = 10
+        PlanCancelationPenalty = 10,
+        RejectedLitigePenalty = 7
     }
 }

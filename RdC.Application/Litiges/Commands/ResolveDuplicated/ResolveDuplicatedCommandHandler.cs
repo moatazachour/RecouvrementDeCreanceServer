@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using RdC.Application.Common.Interfaces;
+using RdC.Domain.Acheteurs;
 using RdC.Domain.Factures;
 
 namespace RdC.Application.Litiges.Commands.ResolveDuplicated
@@ -9,15 +10,18 @@ namespace RdC.Application.Litiges.Commands.ResolveDuplicated
     {
         private readonly ILitigeRepository _litigeRepository;
         private readonly IFactureRepository _factureRepository;
+        private readonly IAcheteurRepository _acheteurRepository;
         private readonly IUnitOfWork _unitOfWork;
 
         public ResolveDuplicatedCommandHandler(
             ILitigeRepository litigeRepository, 
             IFactureRepository factureRepository, 
+            IAcheteurRepository acheteurRepository,
             IUnitOfWork unitOfWork)
         {
             _litigeRepository = litigeRepository;
             _factureRepository = factureRepository;
+            _acheteurRepository = acheteurRepository;
             _unitOfWork = unitOfWork;
         }
 
@@ -41,6 +45,8 @@ namespace RdC.Application.Litiges.Commands.ResolveDuplicated
                 throw new Exception($"Facture with ID {litige.FactureID} not found!");
             }
 
+            var acheteur = await _acheteurRepository.GetByIdAsync(currentFacture.AcheteurID);
+
             if (IsDuplicated(currentFacture, factures))
             {
                 currentFacture.Status = FactureStatus.DUPLIQUE;
@@ -52,6 +58,8 @@ namespace RdC.Application.Litiges.Commands.ResolveDuplicated
             else
             {
                 litige.Reject(request.ResolutedByUserID);
+
+                acheteur.Score -= (float)Penalties.RejectedLitigePenalty;
 
                 currentFacture.CheckFactureStatus();
 
